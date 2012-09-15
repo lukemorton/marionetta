@@ -88,8 +88,8 @@ module Marionetta
         end
 
         cmds << puppet_cmd
-        cmds.join(' && ')
-        ssh.run(cmds)
+        
+        ssh.run(cmds.join(' && '))
       end
 
       def update()
