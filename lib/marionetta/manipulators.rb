@@ -2,14 +2,14 @@ module Marionetta
   module Manipulators
     require_relative 'manipulators/puppet_manipulator'
 
-    def all()
+    def self.all()
       {
         :puppet => PuppetManipulator,
       }
     end
-    
-    def [](key)
-      all[key.to_s]
+
+    def self.[](key)
+      all[key]
     end
   end
 end
