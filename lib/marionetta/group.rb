@@ -22,7 +22,9 @@ module Marionetta
 
     def each_server()
       servers.each do |s|
-        yield s
+        UnitOfWork.new.async.work do
+          yield s
+        end
       end
     end
 
