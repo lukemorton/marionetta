@@ -1,10 +1,6 @@
-require 'celluloid'
-
 module Marionetta
   module Manipulators
     class PuppetManipulator
-      include Celluloid
-
       attr_reader :server
       
       def initialize(server)

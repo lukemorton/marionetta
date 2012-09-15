@@ -1,9 +1,5 @@
-require 'celluloid'
-
 module Marionetta
   class SSH
-    include Celluloid
-
     attr_reader :hostname
 
     def initialize(hostname)
