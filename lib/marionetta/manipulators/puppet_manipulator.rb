@@ -51,7 +51,7 @@ module Marionetta
         cmds = [
           'rm -rf /tmp/puppet',
           'mkdir /tmp/puppet',
-          "cp #{server[:puppet][:manifest]} /tmp/puppet/manifest.pp"
+          "cp #{server[:puppet][:manifest]} /tmp/puppet/manifest.pp",
         ]
 
         if defined? server[:puppet][:modules]
