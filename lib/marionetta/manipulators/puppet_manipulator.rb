@@ -54,16 +54,12 @@ module Marionetta
           "cp #{server[:puppet][:manifest]} /tmp/puppet/manifest.pp",
         ]
 
-          cmds += ["cp -r #{server[:puppet][:modules]} /tmp/puppet/modules"]
         if server[:puppet].has_key?(:modules)
+          cmds << "cp -r #{server[:puppet][:modules]} /tmp/puppet/modules"
         end
 
-        cmds += [
-          'cd /tmp',
-          'tar cvfz puppet.tar.gz puppet'
-        ]
-
-        cmds.join(' && ')
+        cmds << 'cd /tmp'
+        cmds << 'tar cvfz puppet.tar.gz puppet'
 
         system(cmds)
       end
