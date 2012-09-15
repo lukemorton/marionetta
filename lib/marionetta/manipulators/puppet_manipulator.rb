@@ -61,7 +61,7 @@ module Marionetta
         cmds << 'cd /tmp'
         cmds << 'tar cvfz puppet.tar.gz puppet'
 
-        system(cmds)
+        system(cmds.join(' && '))
       end
 
       def send_archive()
