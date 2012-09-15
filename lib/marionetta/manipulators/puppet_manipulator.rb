@@ -54,8 +54,8 @@ module Marionetta
           "cp #{server[:puppet][:manifest]} /tmp/puppet/manifest.pp",
         ]
 
-        if defined? server[:puppet][:modules]
           cmds += ["cp -r #{server[:puppet][:modules]} /tmp/puppet/modules"]
+        if server[:puppet].has_key?(:modules)
         end
 
         cmds += [
@@ -81,14 +81,14 @@ module Marionetta
 
         puppet_cmd = 'sudo puppet apply '
 
-        if defined? server[:puppet][:modules]
+        if server[:puppet].has_key?(:modules)
           puppet_cmd += '--modulepath=/tmp/puppet/modules '
         end
 
         puppet_cmd += 'manifest.pp'
 
-        if defined? server[:puppet][:options]
           puppet_cmd += " #{puppet_options}"
+        if server[:puppet].has_key?(:options)
         end
 
         cmds << puppet_cmd
