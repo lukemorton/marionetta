@@ -7,7 +7,7 @@ describe Marionetta do
   it 'can update puppet without a master on multiple nodes asynchronously' do
     def apply_defaults(s)
       s[:username] = 'ubuntu'
-      s[:puppet] = {:modules => 'puppet/modules'}
+      s[:puppet] = {:modules => File.dirname(__FILE__)+'/puppet/modules'}
     end
 
     staging = Marionetta::Group.new
@@ -15,7 +15,7 @@ describe Marionetta do
       apply_defaults(s)
 
       s[:hostname] = 'staging.example.com'
-      s[:puppet][:manifest] = 'puppet/manifests/staging.pp'
+      s[:puppet][:manifest] = File.dirname(__FILE__)+'/puppet/manifests/staging.pp'
     end
     
     production = Marionetta::Group.new
@@ -23,7 +23,7 @@ describe Marionetta do
       apply_defaults(s)
 
       s[:hostname] = "prod-#{i}.example.com"
-      s[:puppet][:manifest] = 'puppet/manifests/production-web.pp'
+      s[:puppet][:manifest] = File.dirname(__FILE__)+'/puppet/manifests/production-web.pp'
     end
 
     # all = Marionetta::Group.new(staging, production)
@@ -36,7 +36,7 @@ describe Marionetta do
     # Manipulate one server
     puppet = Marionetta::Manipulators::PuppetManipulator.new({
       :hostname => 'vagrant@192.168.33.11',
-      :puppet   => {:manifest => 'puppet/manifest.pp'}
+      :puppet   => {:manifest => File.dirname(__FILE__)+'/puppet/manifest.pp'}
     })
     puppet.update
 
@@ -46,7 +46,7 @@ describe Marionetta do
       apply_defaults(s)
 
       s[:hostname] = 'vagrant@192.168.33.11'
-      s[:puppet] = {:manifest => 'puppet/manifest.pp'}
+      s[:puppet] = {:manifest => File.dirname(__FILE__)+'/puppet/manifest.pp'}
     end
     vagrant.manipulate_each_server(:puppet, :update)
   end
