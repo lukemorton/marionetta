@@ -83,8 +83,8 @@ module Marionetta
 
         puppet_cmd += 'manifest.pp'
 
-          puppet_cmd += " #{puppet_options}"
         if server[:puppet].has_key?(:options)
+          puppet_cmd += " #{server[:puppet][:options]}"
         end
 
         cmds << puppet_cmd
