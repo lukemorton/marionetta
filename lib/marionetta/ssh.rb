@@ -24,11 +24,11 @@ module Marionetta
     end
 
     def rsync(from, to)
-      system("rsync -azP' --delete #{from} #{to}")
+      system("rsync", "-azP", "--delete", "#{from} #{to}")
     end
 
     def run(command)
-      system("ssh #{hostname} #{command}")
+      system("ssh", hostname, command)
     end
   end
 end
