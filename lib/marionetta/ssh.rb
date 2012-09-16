@@ -1,9 +1,9 @@
 module Marionetta
   class SSH
-    attr_reader :hostname
+    attr_reader :server
 
-    def initialize(hostname)
-      @hostname = hostname
+    def initialize(server)
+      @server = server
     end
 
     def get(local_dir, file)
@@ -24,7 +24,7 @@ module Marionetta
     end
 
     def run(command)
-      system("ssh", hostname, command)
+      system("ssh", server[:hostname], command)
     end
   end
 end

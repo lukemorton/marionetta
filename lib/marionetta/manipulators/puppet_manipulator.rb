@@ -8,7 +8,7 @@ module Marionetta
       end
 
       def ssh()
-        @ssh ||= SSH.new(server[:hostname])
+        @ssh ||= SSH.new(server)
       end
 
       def install_deb_repo()
