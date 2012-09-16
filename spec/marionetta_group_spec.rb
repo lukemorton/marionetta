@@ -32,13 +32,11 @@ describe Marionetta::Group do
     end
 
     all = Marionetta::Group.new
-
     all.add_group(staging)
-    all.add_group(production)
   end
 
   it 'should iterate over all servers' do
-  	
+
   end
 
   it 'should iterate over all servers including those of sub groups' do
