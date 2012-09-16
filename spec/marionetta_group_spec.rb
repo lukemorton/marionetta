@@ -20,7 +20,7 @@ describe Marionetta::Group do
       s[:puppet] = {:manifest => File.dirname(__FILE__)+'/puppet/manifest.pp'}
     end
 
-    production.servers
+    production.servers.count.should == 2
   end
 
   it 'should add sub groups' do
