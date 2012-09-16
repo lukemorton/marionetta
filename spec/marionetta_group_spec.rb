@@ -8,8 +8,6 @@ describe Marionetta::Group do
       s[:hostname] = 'vagrant@192.168.33.11'
       s[:puppet] = {:manifest => File.dirname(__FILE__)+'/puppet/manifest.pp'}
     end
-    
-    vagrant.manipulate_each_server(:puppet, :update)
   end
 
   it 'should add multiple server maps at once' do
@@ -36,9 +34,12 @@ describe Marionetta::Group do
   end
 
   it 'should iterate over all servers' do
-
   end
 
   it 'should iterate over all servers including those of sub groups' do
+  end
+
+  it 'should manipulate each server' do
+    # vagrant.manipulate_each_server(:puppet, :update)
   end
 end
