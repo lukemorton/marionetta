@@ -1,6 +1,10 @@
 module Marionetta
   module Manipulators
     class PuppetManipulator
+      def self.tasks()
+        [:install, :update]
+      end
+      
       attr_reader :server
       
       def initialize(server)
