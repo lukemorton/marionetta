@@ -25,7 +25,7 @@ describe Marionetta::Group do
   end
 
   it 'should add sub groups' do
-  	staging = Marionetta::Group.new
+    staging = Marionetta::Group.new
 
     staging.add_server do |s|
       s[:hostname] = 'vagrant@192.168.33.11'
