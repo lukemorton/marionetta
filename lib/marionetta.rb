@@ -8,4 +8,17 @@ module Marionetta
   require_relative 'marionetta/manipulators'
   require_relative 'marionetta/unit_of_work'
   require_relative 'marionetta/group'
+
+  def self.default_server()
+    {
+      :ssh => {
+        :command => 'ssh',
+        :flags   => [],
+      },
+      :rsync => {
+        :command => 'rsync',
+        :flags   => ["-azP", "--delete"],
+      },
+    }
+  end
 end
