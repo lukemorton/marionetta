@@ -1,8 +1,9 @@
 module Marionetta
   class Group
-    attr_reader :groups
+    attr_reader :name, :groups
 
-    def initialize()
+    def initialize(name = nil)
+      @name = name
       @groups = []
       @servers = []
     end
