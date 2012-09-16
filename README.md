@@ -3,6 +3,10 @@
 A small ruby library for executing remote commands on a number
 of servers. Comes with puppet mastery built in.
 
+```
+gem install marionetta
+```
+
 ## Defining a group of servers
 
 Marionetta allows you to describe and manipulate a number of
