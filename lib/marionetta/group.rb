@@ -28,10 +28,10 @@ module Marionetta
       end
     end
 
-    def manipulate_each_server(manipulator_name, method)
+    def manipulate_each_server(manipulator_name, method_name)
       each_server do |s|
         manipulator = Manipulators[manipulator_name].new(s)
-        manipulator.method(method).call()
+        manipulator.method(method_name).call()
       end
     end
   end
