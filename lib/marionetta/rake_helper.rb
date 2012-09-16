@@ -6,8 +6,8 @@ module Marionetta
     include ::Rake::DSL if defined?(::Rake::DSL)
 
     def install_group_tasks(group)
-      Manipulators.all.each do |manipulator_name, Manipulator|
-        Manipulator.tasks.each do |method_name|
+      Manipulators.all.each do |manipulator_name, manipulator_class|
+        manipulator_class.tasks.each do |method_name|
           task(task_name(group, manipulator_name, method_name)) do
             group.manipulate_each_server(manipulator_name, method_name)
           end
