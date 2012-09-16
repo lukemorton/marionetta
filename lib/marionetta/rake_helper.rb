@@ -5,10 +5,16 @@ module Marionetta
   class RakeHelper
     include ::Rake::DSL if defined?(::Rake::DSL)
 
-    def install_group_tasks(group)
+    attr_reader :group
+
+    def initialize(group)
+      @group = group
+    end
+
+    def install_group_tasks()
       Manipulators.all.each do |manipulator_name, manipulator_class|
         manipulator_class.tasks.each do |method_name|
-          task(task_name(group, manipulator_name, method_name)) do
+          task(task_name(manipulator_name, method_name)) do
             group.manipulate_each_server(manipulator_name, method_name)
           end
         end
@@ -17,7 +23,7 @@ module Marionetta
 
   private
 
-    def task_name(group, manipulator_name, method_name)
+    def task_name(manipulator_name, method_name)
       task_name_parts = [manipulator_name, method_name]
 
       if group.name

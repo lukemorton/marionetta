@@ -74,7 +74,7 @@ staging.add_server |s|
   s[:puppet][:manifest] = 'puppet/manifest.pp'
 end
 
-Marionetta::RakeHelper.new.install_group_tasks(staging)
+Marionetta::RakeHelper.new(staging).install_group_tasks
 ```
 
 The tasks `puppet:install` and `puppet:update` will now be
