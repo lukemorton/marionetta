@@ -7,14 +7,14 @@ module Marionetta
     end
 
     def add_server()
-      server = {}
+      server = Marionetta.default_server
       yield server
       @servers << server
     end
 
     def add_servers(range)
       range.each do |i|
-        server = {}
+        server = Marionetta.default_server
         yield server, i
         @servers << server
       end
