@@ -39,7 +39,7 @@ end
 ## Playing puppet master
 
 Instead of running a puppet master server you can use
-Marionetta to orchestrate a number instances puppet manifests.
+Marionetta to orchestrate a number instances.
 
 ``` ruby
 require 'marionetta'
@@ -67,7 +67,7 @@ In your Rakefile you can do something like so:
 ``` ruby
 require 'marionetta/rake_helper'
 
-staging = Marionetta::Group.new(:staging)
+staging = Marionetta::Group.new
 
 staging.add_server |s|
   s[:hostname] = 'staging.example.com'
@@ -77,8 +77,16 @@ end
 Marionetta::RakeHelper.new.install_group_tasks(staging)
 ```
 
+The tasks `puppet:install` and `puppet:update` will now be
+available in your Rakefile. If you want to namespace the tasks
+further pass in a name to your `Marionetta::Group` like so:
+
+``` ruby
+staging = Marionetta::Group.new(:staging)
+```
+
 The tasks `staging:puppet:install` and `staging:puppet:update`
-will be installed.
+will be installed instead.
 
 ## Author
 
