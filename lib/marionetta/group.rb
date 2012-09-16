@@ -1,9 +1,14 @@
 module Marionetta
   class Group
-    attr_reader :servers
+    attr_reader :groups
 
     def initialize()
+      @groups = []
       @servers = []
+    end
+
+    def add_group(group)
+      @groups << group
     end
 
     def add_server()
@@ -18,6 +23,16 @@ module Marionetta
         yield server, i
         @servers << server
       end
+    end
+
+    def servers()
+      servers = @servers
+
+      groups.each do |g|
+        servers.concat(g.servers)
+      end
+
+      return servers
     end
 
     def each_server()
