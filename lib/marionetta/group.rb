@@ -1,3 +1,5 @@
+require 'celluloid'
+
 module Marionetta
   class Group
     attr_reader :name, :groups
@@ -37,12 +39,18 @@ module Marionetta
     end
 
     def each_server()
+      futures = []
+
       servers.each do |s|
         server = s.clone.freeze
 
-        UnitOfWork.new.async.work do
+        futures << Celluloid::Future.new do
           yield server
         end
+      end
+
+      futures.each do |f|
+        f.value
       end
     end
 
