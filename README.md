@@ -50,7 +50,7 @@ require 'marionetta'
 
 servers = Marionetta::Group.new
 
-servers.add_server |s|
+servers.add_server do |s|
   s[:hostname] = 'ubuntu@example.com'
   s[:puppet][:manifest] = 'puppet/manifest.pp'
   s[:puppet][:modules] = 'puppet/modules'
@@ -74,7 +74,7 @@ require 'marionetta/rake_helper'
 
 staging = Marionetta::Group.new
 
-staging.add_server |s|
+staging.add_server do |s|
   s[:hostname] = 'staging.example.com'
   s[:puppet][:manifest] = 'puppet/manifest.pp'
 end
