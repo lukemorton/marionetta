@@ -16,7 +16,7 @@ describe Marionetta::Group do
     production = Marionetta::Group.new
 
     production.add_servers (1..2) do |s, i|
-      s[:hostname] = "prod-#{i}.example.com"
+      s[:hostname] = "vagrant@192.168.33.11"
       s[:puppet] = {:manifest => File.dirname(__FILE__)+'/puppet/manifest.pp'}
     end
 
