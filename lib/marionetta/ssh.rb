@@ -12,6 +12,7 @@ module Marionetta
 
     def put(remote_path, base_name = File.basename(remote_path))
       require 'tempfile'
+      
       Tempfile.open(base_name) do |fp|
         fp.puts yield
         fp.flush
