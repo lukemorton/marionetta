@@ -3,6 +3,7 @@ require File.dirname(__FILE__)+'/lib/marionetta'
 Gem::Specification.new do |s|
   s.name        = "marionetta"
   s.version     = Marionetta::VERSION
+  s.homepage    = 'https://github.com/DrPheltRight/marionetta'
   s.authors     = ["Luke Morton"]
   s.email       = ["lukemorton.dev@gmail.com"]
   s.summary     = Marionetta::DESCRIPTION
