@@ -65,6 +65,7 @@ for each of your groups.
 In your Rakefile you can do something like so:
 
 ``` ruby
+require 'marionetta'
 require 'marionetta/rake_helper'
 
 staging = Marionetta::Group.new
