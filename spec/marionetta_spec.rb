@@ -33,13 +33,6 @@ describe Marionetta do
     env = Vagrant::Environment.new(:cwd => File.dirname(__FILE__)+'/vagrant')
     env.cli('up')
 
-    # Manipulate one server
-    puppet = Marionetta::Manipulators::PuppetManipulator.new({
-      :hostname => 'vagrant@192.168.33.11',
-      :puppet   => {:manifest => File.dirname(__FILE__)+'/puppet/manifest.pp'}
-    })
-    puppet.update
-
     # Manipulate a group of servers
     vagrant = Marionetta::Group.new
     vagrant.add_server do |s|
