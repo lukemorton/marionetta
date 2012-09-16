@@ -38,8 +38,10 @@ module Marionetta
 
     def each_server()
       servers.each do |s|
+        server = s.clone.freeze
+
         UnitOfWork.new.async.work do
-          yield s
+          yield server
         end
       end
     end
