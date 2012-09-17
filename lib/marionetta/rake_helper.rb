@@ -13,6 +13,10 @@ module Marionetta
 
     def install_group_tasks()
       install_group_tasks_for(group)
+      
+      group.groups.each do |g|
+        install_group_tasks_for(g)
+      end
     end
 
   private
