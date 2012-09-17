@@ -1,5 +1,5 @@
 module Marionetta
-  class SSH
+  class CommandRunner
     attr_reader :server
 
     def initialize(server)

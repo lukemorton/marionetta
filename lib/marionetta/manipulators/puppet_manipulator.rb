@@ -4,7 +4,7 @@ require 'marionetta/ssh'
 module Marionetta
   module Manipulators
     class PuppetManipulator
-      attr_writer :ssh
+      attr_writer :cmd
 
       def self.tasks()
         [:install, :update]
@@ -16,8 +16,8 @@ module Marionetta
         @server = server
       end
 
-      def ssh()
-        @ssh ||= SSH.new(server)
+      def cmd()
+        @cmd ||= CommandRunner.new(server)
       end
 
       def install_deb_repo()
@@ -31,7 +31,7 @@ module Marionetta
 
         repo_check_cmd = "test -f /etc/apt/sources.list.d/puppetlabs.list"
 
-        ssh.ssh("#{repo_check_cmd} || { #{repo_install_cmd}; }")
+        cmd.ssh("#{repo_check_cmd} || { #{repo_install_cmd}; }")
       end
 
       def install_deb()
@@ -40,7 +40,7 @@ module Marionetta
           'sudo aptitude install -y puppet'
         ].join(' && ')
 
-        ssh.ssh("which puppet || { #{install_cmd}; }")
+        cmd.ssh("which puppet || { #{install_cmd}; }")
       end
 
       def install()
@@ -49,7 +49,7 @@ module Marionetta
       end
 
       def installed?()
-        ssh.ssh('which puppet')
+        cmd.ssh('which puppet')
       end
 
       def archive_files()
@@ -66,11 +66,11 @@ module Marionetta
         cmds << 'cd /tmp'
         cmds << 'tar cvfz puppet.tar.gz puppet'
 
-        ssh.system(cmds.join(' && '))
+        cmd.system(cmds.join(' && '))
       end
 
       def send_archive()
-        ssh.rsync('/tmp/puppet.tar.gz', "#{server[:hostname]}:/tmp")
+        cmd.rsync('/tmp/puppet.tar.gz', "#{server[:hostname]}:/tmp")
       end
 
       def apply_archive()
@@ -94,7 +94,7 @@ module Marionetta
 
         cmds << puppet_cmd
         
-        ssh.ssh(cmds.join(' && '))
+        cmd.ssh(cmds.join(' && '))
       end
 
       def update()
