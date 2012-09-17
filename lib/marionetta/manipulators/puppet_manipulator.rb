@@ -4,6 +4,8 @@ require 'marionetta/ssh'
 module Marionetta
   module Manipulators
     class PuppetManipulator
+      attr_writer :ssh
+
       def self.tasks()
         [:install, :update]
       end
