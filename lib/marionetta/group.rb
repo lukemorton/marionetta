@@ -24,9 +24,9 @@ module Marionetta
       return groups
     end
 
-    def add_server()
-      server = Marionetta.default_server
-      yield server
+    def add_server(server = nil)
+      server ||= Marionetta.default_server
+      yield server if block_given?
       @servers << server
     end
 

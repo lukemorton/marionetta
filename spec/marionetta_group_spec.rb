@@ -4,6 +4,12 @@ require 'marionetta/group'
 describe Marionetta::Group do
   it 'should add server map' do
     vagrant = Marionetta::Group.new
+    vagrant.add_server({:hostname => 'localhost'})
+    vagrant.servers.count.should == 1
+  end
+
+  it 'should add server map from block' do
+    vagrant = Marionetta::Group.new
 
     vagrant.add_server do |s|
       s[:hostname] = 'vagrant@192.168.33.11'
@@ -11,6 +17,17 @@ describe Marionetta::Group do
     end
 
     vagrant.servers.count.should == 1
+  end
+
+  it 'should extend provided map when block also given' do
+    vagrant = Marionetta::Group.new
+    
+    vagrant.add_server(:hostname => 'localhost') do |s|
+      s[:additional] = true
+    end
+
+    vagrant.servers.first.has_key?(:hostname).should == true
+    vagrant.servers.first.has_key?(:additional).should == true
   end
 
   it 'should add sub groups' do
