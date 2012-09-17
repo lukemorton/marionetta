@@ -33,7 +33,7 @@ module Marionetta
     def servers()
       servers = @servers
 
-      groups.each do |g|
+      @groups.each do |g|
         servers.concat(g.servers)
       end
 
