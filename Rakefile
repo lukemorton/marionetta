@@ -14,5 +14,5 @@ task(:gem) do
     'git stash pop',
     'git reset',
   ]
-  system(cmd.join(' '))
+  system(cmd.join(' && '))
 end
