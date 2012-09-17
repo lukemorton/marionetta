@@ -23,7 +23,7 @@ task(:publish => :gem) do
   version = Marionetta::VERSION
   git_tag = "v#{version}"
 
-  if `git tag -l #{git_tag}`
+  unless `git tag -l #{git_tag}`.empty?
     raise 'Version tag already released.'
   end
 
@@ -32,7 +32,7 @@ task(:publish => :gem) do
     "git push origin develop develop:master #{git_tag}",
     "gem push marionetta-#{version}.gem",
   ]
-  system(cmd.join(' '))
+  system(cmd.join(' && '))
 end
 
 task(:clean) do
