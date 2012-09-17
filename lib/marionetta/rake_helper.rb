@@ -13,7 +13,7 @@ module Marionetta
 
     def install_group_tasks()
       install_group_tasks_for(group)
-      
+
       group.groups.each do |g|
         install_group_tasks_for(g)
       end
@@ -32,13 +32,11 @@ module Marionetta
     end
 
     def task_name(manipulator_name, method_name)
-      task_name_parts = [manipulator_name, method_name]
-
-      if group.name
-        task_name_parts.unshift(group.name)
+      unless group.name
+        raise 'Group must be named'
       end
 
-      return task_name_parts.join(':')
+      return "#{group.name}:#{manipulator_name}:#{method_name}"
     end
   end
 end

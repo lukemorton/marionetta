@@ -72,7 +72,7 @@ In your Rakefile you can do something like so:
 require 'marionetta'
 require 'marionetta/rake_helper'
 
-staging = Marionetta::Group.new
+staging = Marionetta::Group.new(:staging)
 
 staging.add_server do |s|
   s[:hostname] = 'staging.example.com'
@@ -82,16 +82,10 @@ end
 Marionetta::RakeHelper.new(staging).install_group_tasks
 ```
 
-The tasks `puppet:install` and `puppet:update` will now be
-available in your Rakefile. If you want to namespace the tasks
-further pass in a name to your `Marionetta::Group` like so:
-
-``` ruby
-staging = Marionetta::Group.new(:staging)
-```
-
 The tasks `staging:puppet:install` and `staging:puppet:update`
-will be installed instead.
+will now be available in your Rakefile.
+
+**Groups must have names if you want to generate rake tasks.**
 
 ## Author
 
