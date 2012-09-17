@@ -25,14 +25,14 @@ module Marionetta
       Manipulators.all.each do |manipulator_name, manipulator_class|
         manipulator_class.tasks.each do |method_name|
           desc("#{manipulator_name} #{method_name} (marionetta)")
-          task(task_name(manipulator_name, method_name)) do
+          task(task_name(group, manipulator_name, method_name)) do
             group.manipulate_each_server(manipulator_name, method_name)
           end
         end
       end
     end
 
-    def task_name(manipulator_name, method_name)
+    def task_name(group, manipulator_name, method_name)
       unless group.name
         raise 'Group must be named'
       end
