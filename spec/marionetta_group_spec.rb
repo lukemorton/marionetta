@@ -13,17 +13,6 @@ describe Marionetta::Group do
     vagrant.servers.count.should == 1
   end
 
-  it 'should add multiple server maps at once' do
-    production = Marionetta::Group.new
-
-    production.add_servers (1..2) do |s, i|
-      s[:hostname] = "vagrant@192.168.33.11"
-      s[:puppet] = {:manifest => File.dirname(__FILE__)+'/puppet/manifest.pp'}
-    end
-
-    production.servers.count.should == 2
-  end
-
   it 'should add sub groups' do
     staging = Marionetta::Group.new
 
