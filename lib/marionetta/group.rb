@@ -1,3 +1,5 @@
+require 'marionetta'
+require 'marionetta/manipulators'
 require 'celluloid'
 
 module Marionetta

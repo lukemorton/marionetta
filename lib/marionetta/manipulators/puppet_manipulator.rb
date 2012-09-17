@@ -1,3 +1,6 @@
+require 'marionetta'
+require 'marionetta/ssh'
+
 module Marionetta
   module Manipulators
     class PuppetManipulator
