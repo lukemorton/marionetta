@@ -8,7 +8,7 @@ require 'marionetta'
 
 task(:default => :spec)
 
-task(:gem) do
+task(:gem => :spec) do
   cmd = [
     'git add -A',
     'git stash',
