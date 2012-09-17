@@ -16,3 +16,7 @@ task(:gem) do
   ]
   system(cmd.join(' && '))
 end
+
+task(:clean) do
+  system('rm -rf *.gem')
+end
