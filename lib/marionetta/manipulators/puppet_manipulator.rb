@@ -29,7 +29,7 @@ module Marionetta
 
         repo_check_cmd = "test -f /etc/apt/sources.list.d/puppetlabs.list"
 
-        ssh.run("#{repo_check_cmd} || { #{repo_install_cmd}; }")
+        ssh.ssh("#{repo_check_cmd} || { #{repo_install_cmd}; }")
       end
 
       def install_deb()
@@ -38,7 +38,7 @@ module Marionetta
           'sudo aptitude install -y puppet'
         ].join(' && ')
 
-        ssh.run("which puppet || { #{install_cmd}; }")
+        ssh.ssh("which puppet || { #{install_cmd}; }")
       end
 
       def install()
@@ -47,7 +47,7 @@ module Marionetta
       end
 
       def installed?()
-        ssh.run('which puppet')
+        ssh.ssh('which puppet')
       end
 
       def archive_files()
@@ -64,7 +64,7 @@ module Marionetta
         cmds << 'cd /tmp'
         cmds << 'tar cvfz puppet.tar.gz puppet'
 
-        system(cmds.join(' && '))
+        ssh.system(cmds.join(' && '))
       end
 
       def send_archive()
@@ -92,7 +92,7 @@ module Marionetta
 
         cmds << puppet_cmd
         
-        ssh.run(cmds.join(' && '))
+        ssh.ssh(cmds.join(' && '))
       end
 
       def update()

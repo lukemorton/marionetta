@@ -32,7 +32,7 @@ module Marionetta
       system(*rsync_cmd.flatten)
     end
 
-    def run(command)
+    def ssh(command)
       ssh_cmd = [server[:ssh][:command]]
 
       if server[:ssh].has_key?(:flags)
