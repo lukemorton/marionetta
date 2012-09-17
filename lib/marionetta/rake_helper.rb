@@ -12,6 +12,12 @@ module Marionetta
     end
 
     def install_group_tasks()
+      install_group_tasks_for(group)
+    end
+
+  private
+
+    def install_group_tasks_for(group)
       Manipulators.all.each do |manipulator_name, manipulator_class|
         manipulator_class.tasks.each do |method_name|
           task(task_name(manipulator_name, method_name)) do
@@ -20,8 +26,6 @@ module Marionetta
         end
       end
     end
-
-  private
 
     def task_name(manipulator_name, method_name)
       task_name_parts = [manipulator_name, method_name]
