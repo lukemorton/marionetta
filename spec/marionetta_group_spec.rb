@@ -1,4 +1,4 @@
-require 'marionetta'
+require 'spec_helper'
 require 'marionetta/group'
 
 describe Marionetta::Group do

@@ -1,4 +1,4 @@
-require 'marionetta'
+require 'spec_helper'
 require 'marionetta/rake_helper'
 
 describe Marionetta::RakeHelper do

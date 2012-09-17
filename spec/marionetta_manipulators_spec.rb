@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'marionetta/manipulators'
 
 describe Marionetta::Manipulators do

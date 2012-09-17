@@ -1,8 +1,5 @@
+require 'spec_helper'
 require 'marionetta'
-require 'vagrant'
-
-env = Vagrant::Environment.new(:cwd => File.dirname(__FILE__)+'/vagrant')
-env.cli('up')
 
 describe Marionetta do
   it 'should provide a default SSH map' do
