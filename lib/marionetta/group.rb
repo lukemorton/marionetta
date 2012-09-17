@@ -2,7 +2,7 @@ require 'celluloid'
 
 module Marionetta
   class Group
-    attr_reader :name, :groups
+    attr_reader :name
 
     def initialize(name = nil)
       @name = name
@@ -12,6 +12,16 @@ module Marionetta
 
     def add_group(group)
       @groups << group
+    end
+
+    def groups()
+      groups = @groups
+
+      groups.each do |g|
+        groups.concat(g.groups)
+      end
+
+      return groups
     end
 
     def add_server()
