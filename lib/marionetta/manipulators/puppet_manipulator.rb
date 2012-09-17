@@ -1,5 +1,5 @@
 require 'marionetta'
-require 'marionetta/ssh'
+require 'marionetta/command_runner'
 
 module Marionetta
   module Manipulators
