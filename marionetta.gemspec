@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
 
   s.require_paths = ["lib"]
 
-  s.add_dependency('open4')
   s.add_dependency('celluloid')
   s.add_dependency('fpm')
 
