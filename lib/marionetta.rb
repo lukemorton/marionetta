@@ -1,5 +1,5 @@
 module Marionetta
-  VERSION     = '0.2.1'
+  VERSION     = '0.2.2'
   DESCRIPTION = 'For lightweight puppet mastery. Organise
                  multiple machines via rsync and SSH rather
                  than using puppet master'
@@ -12,7 +12,7 @@ module Marionetta
         :command => 'ssh',
         :flags   => [],
       },
-      
+
       :rsync => {
         :command => 'rsync',
         :flags   => ["-azP", "--delete"],
