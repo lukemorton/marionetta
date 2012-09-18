@@ -30,11 +30,11 @@ module Marionetta
       system(*rsync_cmd.flatten)
     end
 
-    def get(file_path, local_dir = File.basename(file_path))
+    def get(file_path, local_dir = File.dirname(file_path))
       rsync("#{server[:hostname]}:#{file_path}", local_dir)
     end
 
-    def put(file_path, remote_dir = File.basename(file_path))
+    def put(file_path, remote_dir = File.dirname(file_path))
       rsync(file_path, "#{server[:hostname]}:#{remote_dir}")
     end
 
