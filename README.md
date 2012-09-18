@@ -96,6 +96,27 @@ will now be available in your Rakefile.
 
 **Groups must have names if you want to generate rake tasks.**
 
+## Using the debloyer
+
+Also included is a .deb deploying manipulator. You can use
+this to deploy your application over SSH as a .deb.
+
+``` ruby
+require 'marionetta'
+
+staging = Marionetta::Group.new(:staging)
+
+staging.add_server do |s|
+  s[:hostname] = 'staging.example.com'
+  s[:debloyer] = {
+    :from => '/my-app',
+    :to   => '/home/staging/www',
+  }
+end
+
+staging.manipulate_each_server(:debployer, :deploy)
+```
+
 ## Author
 
 Luke Morton a.k.a. DrPheltRight
