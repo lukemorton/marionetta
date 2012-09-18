@@ -9,7 +9,7 @@ describe Marionetta::RakeHelper do
     Marionetta::RakeHelper.new(vagrant).install_group_tasks
     Rake::Task.tasks.count.should > 0
 
-    Rake::Task['vagrant:puppet:update'].invoke
-    Rake::Task['vagrant:debloyer:deploy'].invoke
+    Rake::Task['puppet:vagrant:update'].invoke
+    Rake::Task['debloyer:vagrant:deploy'].invoke
   end
 end

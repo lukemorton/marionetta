@@ -25,7 +25,7 @@ module Marionetta
     def install_group_tasks_for(group)
       Manipulators.all.each do |manipulator_name, manipulator_class|
         manipulator_class.tasks.each do |method_name|
-          desc("#{method_name} #{manipulator_name} on #{group.name} (marionetta)")
+          desc(task_desc(group, manipulator_name, method_name))
           task(task_name(group, manipulator_name, method_name)) do
             group.manipulate_each_server(manipulator_name, method_name)
           end
@@ -38,7 +38,11 @@ module Marionetta
         raise 'Group must be named'
       end
 
-      return "#{group.name}:#{manipulator_name}:#{method_name}"
+      return "#{manipulator_name}:#{group.name}:#{method_name}"
+    end
+
+    def task_desc(group, manipulator_name, method_name)
+      "#{method_name} #{manipulator_name} on #{group.name} (marionetta)"
     end
   end
 end
