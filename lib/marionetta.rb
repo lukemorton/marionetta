@@ -17,6 +17,7 @@ module Marionetta
       :logger => Logger.new($stdout),
 
       :debloyer => {
+        :name => 'debloyer',
         :fpm => {
           :command => 'fpm',
           :flags => [
