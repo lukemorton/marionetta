@@ -108,10 +108,8 @@ staging = Marionetta::Group.new(:staging)
 
 staging.add_server do |s|
   s[:hostname] = 'staging.example.com'
-  s[:debloyer] = {
-    :from => '/my-app',
-    :to   => '/home/staging/www',
-  }
+  s[:debloyer][:from] = '/my-app'
+  s[:debloyer][:to] = '/home/staging/www'
 end
 
 staging.manipulate_each_server(:debployer, :deploy)
