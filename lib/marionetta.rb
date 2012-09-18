@@ -6,15 +6,17 @@ module Marionetta
 
   def self.default_server()
     {
+      :logger => Logger.new($stdout),
+
       :ssh => {
         :command => 'ssh',
         :flags   => [],
       },
+      
       :rsync => {
         :command => 'rsync',
         :flags   => ["-azP", "--delete"],
       },
-      :logger => Logger.new($stdout),
 
       :debloyer => {
         :name => 'debloyer',
