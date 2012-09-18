@@ -10,5 +10,6 @@ describe Marionetta::RakeHelper do
     Rake::Task.tasks.count.should > 0
 
     Rake::Task['vagrant:puppet:update'].invoke
+    Rake::Task['vagrant:debloyer:deploy'].invoke
   end
 end
