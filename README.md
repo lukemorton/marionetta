@@ -112,8 +112,8 @@ end
 Marionetta::RakeHelper.new(staging).install_group_tasks
 ```
 
-The tasks `staging:puppet:install`, `staging:puppet:update`
-`staging:debloyer:deploy` will now be available in your
+The tasks `puppet:staging:install`, `puppet:staging:update`
+`debloyer:staging:deploy` will now be available in your
 Rakefile.
 
 **Groups must have names if you want to generate rake tasks.**
