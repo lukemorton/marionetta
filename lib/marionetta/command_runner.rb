@@ -15,7 +15,7 @@ module Marionetta
         server[:logger].debug(stderr.read)
       end
       
-      return status.exitstatus
+      return status.exitstatus == 0
     end
 
     def rsync(from, to)
