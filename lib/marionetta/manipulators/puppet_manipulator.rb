@@ -10,11 +10,29 @@ module Marionetta
         [:install, :update]
       end
       
-      attr_reader :server
-      
       def initialize(server)
         @server = server
       end
+
+      def install()
+        install_deb_repo
+        install_deb
+      end
+
+      def installed?()
+        cmd.ssh('which puppet')
+      end
+
+      def update()
+        install unless installed?
+        archive_files
+        send_archive
+        apply_archive
+      end
+
+    private
+    
+      attr_reader :server
 
       def cmd()
         @cmd ||= CommandRunner.new(server)
@@ -41,15 +59,6 @@ module Marionetta
         ].join(' && ')
 
         cmd.ssh("which puppet || { #{install_cmd}; }")
-      end
-
-      def install()
-        install_deb_repo
-        install_deb
-      end
-
-      def installed?()
-        cmd.ssh('which puppet')
       end
 
       def archive_files()
@@ -95,13 +104,6 @@ module Marionetta
         cmds << puppet_cmd
         
         cmd.ssh(cmds.join(' && '))
-      end
-
-      def update()
-        install unless installed?
-        archive_files
-        send_archive
-        apply_archive
       end
     end
   end
