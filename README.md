@@ -14,7 +14,7 @@ servers in parallel via SSH. First you need to define a group
 of servers:
 
 ``` ruby
-require 'marionetta'
+require 'marionetta/group'
 
 servers = Marionetta::Group.new
 
@@ -55,7 +55,7 @@ Instead of running a puppet master server you can use
 Marionetta to orchestrate a number instances.
 
 ``` ruby
-require 'marionetta'
+require 'marionetta/group'
 
 servers = Marionetta::Group.new
 
@@ -78,7 +78,7 @@ for each of your groups.
 In your Rakefile you can do something like so:
 
 ``` ruby
-require 'marionetta'
+require 'marionetta/group'
 require 'marionetta/rake_helper'
 
 staging = Marionetta::Group.new(:staging)
@@ -102,7 +102,7 @@ Also included is a .deb deploying manipulator. You can use
 this to deploy your application over SSH as a .deb.
 
 ``` ruby
-require 'marionetta'
+require 'marionetta/group'
 
 staging = Marionetta::Group.new(:staging)
 
