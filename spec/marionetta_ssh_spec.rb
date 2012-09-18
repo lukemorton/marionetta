@@ -43,4 +43,11 @@ describe Marionetta::CommandRunner do
     cmd.archive(LIB, '/tmp/custom.archive')
     File.exists?('/tmp/custom.archive').should == true
   end
+
+  it 'should extract an archive over ssh' do
+    cmd.archive(LIB, '/tmp')
+    cmd.put('/tmp/lib.tar.gz')
+    cmd.ssh_extract('/tmp/lib.tar.gz')
+    cmd.ssh("[ -d /tmp/lib ]").should == true
+  end
 end

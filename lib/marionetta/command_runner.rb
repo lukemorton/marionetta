@@ -70,5 +70,22 @@ module Marionetta
 
       system(*archive_cmd.flatten)
     end
+
+    def ssh_extract(archive_path, save_to = File.dirname(archive_path))
+      cmds = [
+        "mkdir -p #{save_to}",
+        "cd #{save_to}",
+      ]
+
+      extract_cmd = [
+        server[:extract][:command],
+        server[:extract][:flags],
+        archive_path,
+      ]
+
+      cmds << extract_cmd.flatten.join(' ')
+
+      ssh(cmds.join(' && '))
+    end
   end
 end

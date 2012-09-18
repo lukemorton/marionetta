@@ -24,6 +24,11 @@ module Marionetta
         :ext => 'tar.gz',
       },
 
+      :extract => {
+        :command => 'tar',
+        :flags => ['-xvf'],
+      },
+
       :debloyer => {
         :name => 'debloyer',
         :fpm => {
