@@ -83,15 +83,7 @@ describe Marionetta::Group do
 
   it 'should manipulate each server' do
     vagrant = Marionetta::Group.new
-
-    vagrant.add_server do |s|
-      s[:hostname] = 'vagrant@192.168.33.11'
-      ssh_key_path = File.dirname(__FILE__)+'/vagrant/key'
-      s[:ssh][:flags] = ['-i', ssh_key_path]
-      s[:rsync][:flags] = ['-azP', '-e', "ssh -i #{ssh_key_path}", '--delete']
-      s[:puppet] = {:manifest => File.dirname(__FILE__)+'/puppet/manifest.pp'}
-    end
-
+    vagrant.add_server(server)
     vagrant.manipulate_each_server(:puppet, :update)
   end
 end
