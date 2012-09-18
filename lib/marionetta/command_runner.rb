@@ -18,14 +18,6 @@ module Marionetta
       return status.exitstatus
     end
 
-    def get(file_path, local_dir = File.basename(file_path))
-      rsync("#{server[:hostname]}:#{file_path}", local_dir)
-    end
-
-    def put(file_path, remote_dir = File.basename(file_path))
-      rsync(file_path, "#{server[:hostname]}:#{remote_dir}")
-    end
-
     def rsync(from, to)
       rsync_cmd = [server[:rsync][:command]]
 
@@ -36,6 +28,14 @@ module Marionetta
       rsync_cmd << [from, to]
 
       system(*rsync_cmd.flatten)
+    end
+
+    def get(file_path, local_dir = File.basename(file_path))
+      rsync("#{server[:hostname]}:#{file_path}", local_dir)
+    end
+
+    def put(file_path, remote_dir = File.basename(file_path))
+      rsync(file_path, "#{server[:hostname]}:#{remote_dir}")
     end
 
     def ssh(command)
