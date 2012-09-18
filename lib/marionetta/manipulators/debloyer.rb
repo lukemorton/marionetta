@@ -4,7 +4,7 @@ module Marionetta
   module Manipulators
     class Debloyer
       def self.tasks()
-        [:build, :deploy]
+        [:deploy]
       end
       
       attr_writer :cmd
@@ -13,13 +13,11 @@ module Marionetta
         @server = server
       end
 
-      def build()
-        build_deb
-      end
-
       def deploy()
-        send_deb
-        apply_deb
+        deb_path = create_deb_path
+        build_deb(deb_path)
+        send_deb(deb_path)
+        apply_deb(deb_path)
       end
 
     private

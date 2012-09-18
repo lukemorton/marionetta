@@ -2,7 +2,7 @@ require 'spec_helper'
 require "marionetta/manipulators/debloyer"
 
 describe Marionetta::Manipulators::Debloyer do
-  it 'should build a deb' do
+  it 'should deploy a deb' do
     ssh_key_path = File.dirname(__FILE__)+'/vagrant/key'
 
     server = Marionetta.default_server
