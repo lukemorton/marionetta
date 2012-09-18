@@ -1,14 +1,13 @@
-require 'marionetta'
 require 'marionetta/command_runner'
 
 module Marionetta
   module Manipulators
     class PuppetManipulator
-      attr_writer :cmd
-
       def self.tasks()
         [:install, :update]
       end
+
+      attr_writer :cmd
       
       def initialize(server)
         @server = server
