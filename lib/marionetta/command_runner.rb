@@ -1,3 +1,5 @@
+require 'open4'
+
 module Marionetta
   class CommandRunner
     attr_reader :server
@@ -7,7 +9,13 @@ module Marionetta
     end
     
     def system(*args)
-      Kernel.system(*args)
+      status = Open4::popen4(*args) do |pid, stdin, stdout, stderr|
+        server[:logger].info(args.join(' '))
+        server[:logger].debug(stdout.read)
+        server[:logger].debug(stderr.read)
+      end
+      
+      return status.exitstatus
     end
 
     def get(local_dir, file)
