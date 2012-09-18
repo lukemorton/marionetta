@@ -32,12 +32,12 @@ module Marionetta
       system(*rsync_cmd.flatten)
     end
 
-    def get(file_path, local_dir = File.dirname(file_path))
-      rsync("#{server[:hostname]}:#{file_path}", local_dir)
+    def get(file_path, save_to = File.dirname(file_path))
+      rsync("#{server[:hostname]}:#{file_path}", save_to)
     end
 
-    def put(file_path, remote_dir = File.dirname(file_path))
-      rsync(file_path, "#{server[:hostname]}:#{remote_dir}")
+    def put(file_path, save_to = File.dirname(file_path))
+      rsync(file_path, "#{server[:hostname]}:#{save_to}")
     end
 
     def ssh(command, &block)
