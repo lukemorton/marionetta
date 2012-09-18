@@ -18,6 +18,12 @@ module Marionetta
         :flags   => ['-azP', '--delete'],
       },
 
+      :archive => {
+        :command => 'tar',
+        :flags => ['-zvcf'],
+        :ext => 'tar.gz',
+      },
+
       :debloyer => {
         :name => 'debloyer',
         :fpm => {

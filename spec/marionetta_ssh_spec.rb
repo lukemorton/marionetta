@@ -27,4 +27,20 @@ describe Marionetta::CommandRunner do
       stdout.read.should == "vagrant\n"
     end
   end
+
+  it 'should archive directory' do
+    cmd.archive(LIB)
+    File.exists?("#{LIB}.tar.gz").should == true
+    system('rm', "#{LIB}.tar.gz")
+  end
+
+  it 'should archive directory to specified path' do
+    cmd.archive(LIB, '/tmp')
+    File.exists?("/tmp/lib.tar.gz").should == true
+  end
+
+  it 'should archive directory to specified file' do
+    cmd.archive(LIB, '/tmp/custom.archive')
+    File.exists?('/tmp/custom.archive').should == true
+  end
 end

@@ -52,5 +52,23 @@ module Marionetta
 
       system(*ssh_cmd.flatten, &block)
     end
+
+    def archive(directory, save_to = nil)
+      if save_to.nil?
+        save_to = "#{directory}.#{server[:archive][:ext]}"
+      elsif File.directory?(save_to)
+        dirname = File.basename(directory)
+        save_to = "#{save_to}/#{dirname}.#{server[:archive][:ext]}"
+      end
+
+      archive_cmd = [
+        server[:archive][:command],
+        server[:archive][:flags],
+        save_to,
+        directory,
+      ]
+
+      system(*archive_cmd.flatten)
+    end
   end
 end
