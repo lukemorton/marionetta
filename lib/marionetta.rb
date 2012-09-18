@@ -14,6 +14,7 @@ module Marionetta
         :command => 'rsync',
         :flags   => ["-azP", "--delete"],
       },
+      :logger => Logger.new($stdout),
     }
   end
 end
