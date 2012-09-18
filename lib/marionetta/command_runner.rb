@@ -10,6 +10,8 @@ module Marionetta
     
     def system(*args)
       status = Open4::popen4(*args) do |pid, stdin, stdout, stderr|
+        yield stdout, stderr if block_given?
+
         server[:logger].info(args.join(' '))
         server[:logger].debug(stdout.read)
         server[:logger].debug(stderr.read)
@@ -38,7 +40,7 @@ module Marionetta
       rsync(file_path, "#{server[:hostname]}:#{remote_dir}")
     end
 
-    def ssh(command)
+    def ssh(command, &block)
       ssh_cmd = [server[:ssh][:command]]
 
       if server[:ssh].has_key?(:flags)
@@ -48,7 +50,7 @@ module Marionetta
       ssh_cmd << server[:hostname]
       ssh_cmd << command
 
-      system(*ssh_cmd.flatten)
+      system(*ssh_cmd.flatten, &block)
     end
   end
 end
