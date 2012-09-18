@@ -29,11 +29,11 @@ module Marionetta
       end
 
       def build_cmd()
-        'fpm'
+        server[:debloyer][:fpm][:command]
       end
 
       def build_options()
-        server[:debloyer][:fpm]
+        server[:debloyer][:fpm][:flags]
       end
 
       def build_deb()
