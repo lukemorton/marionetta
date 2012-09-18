@@ -70,32 +70,6 @@ end
 servers.manipulate_each_server(:puppet, :update)
 ```
 
-## Using Marionetta in your Rakefile
-
-Marionetta provides an easy mechanism to generate rake tasks
-for each of your groups.
-
-In your Rakefile you can do something like so:
-
-``` ruby
-require 'marionetta/group'
-require 'marionetta/rake_helper'
-
-staging = Marionetta::Group.new(:staging)
-
-staging.add_server do |s|
-  s[:hostname] = 'staging.example.com'
-  s[:puppet][:manifest] = 'puppet/manifest.pp'
-end
-
-Marionetta::RakeHelper.new(staging).install_group_tasks
-```
-
-The tasks `staging:puppet:install` and `staging:puppet:update`
-will now be available in your Rakefile.
-
-**Groups must have names if you want to generate rake tasks.**
-
 ## Using the debloyer
 
 Also included is a .deb deploying manipulator. You can use
@@ -114,6 +88,35 @@ end
 
 staging.manipulate_each_server(:debloyer, :deploy)
 ```
+
+## Using Marionetta in your Rakefile
+
+Marionetta provides an easy mechanism to generate rake tasks
+for each of your groups.
+
+In your Rakefile you can do something like so:
+
+``` ruby
+require 'marionetta/group'
+require 'marionetta/rake_helper'
+
+staging = Marionetta::Group.new(:staging)
+
+staging.add_server do |s|
+  s[:hostname] = 'staging.example.com'
+  s[:puppet][:manifest] = 'puppet/manifest.pp'
+  s[:debloyer][:from] = '/my-app'
+  s[:debloyer][:to] = '/home/staging/www'
+end
+
+Marionetta::RakeHelper.new(staging).install_group_tasks
+```
+
+The tasks `staging:puppet:install`, `staging:puppet:update`
+`staging:debloyer:deploy` will now be available in your
+Rakefile.
+
+**Groups must have names if you want to generate rake tasks.**
 
 ## Author
 
