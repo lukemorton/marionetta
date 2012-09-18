@@ -15,6 +15,16 @@ module Marionetta
         :flags   => ["-azP", "--delete"],
       },
       :logger => Logger.new($stdout),
+
+      :debloyer => {
+        :fpm => {
+          :command => 'fpm',
+          :flags => [
+            '-s', 'dir',
+            '-t', 'deb',
+          ],
+        },
+      },
     }
   end
 end
