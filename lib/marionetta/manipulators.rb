@@ -1,10 +1,12 @@
 module Marionetta
   module Manipulators
+    require_relative 'manipulators/debloyer'
     require_relative 'manipulators/puppet_manipulator'
 
     def self.all()
       {
-        :puppet => PuppetManipulator,
+        :debployer => Debloyer,
+        :puppet    => PuppetManipulator,
       }
     end
 
