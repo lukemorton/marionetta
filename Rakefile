@@ -35,5 +35,5 @@ task(:publish => :gem) do
 end
 
 task(:clean) do
-  system('rm -rf *.gem')
+  system('rm *.gem')
 end
