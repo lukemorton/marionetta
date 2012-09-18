@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency('open4')
   s.add_dependency('celluloid')
+  s.add_dependency('fpm')
 
   s.add_development_dependency('rake')
   s.add_development_dependency('rspec')
