@@ -18,18 +18,12 @@ module Marionetta
       return status.exitstatus
     end
 
-    def get(local_dir, file)
-      rsync("#{server[:hostname]}", local_dir)
+    def get(file_path, local_dir = File.basename(file_path))
+      rsync("#{server[:hostname]}:#{file_path}", local_dir)
     end
 
-    def put(remote_path, base_name = File.basename(remote_path))
-      require 'tempfile'
-      
-      Tempfile.open(base_name) do |fp|
-        fp.puts yield
-        fp.flush
-        rsync(fp.path, "#{server[:hostname]}:#{remote_path}")
-      end
+    def put(file_path, remote_dir = File.basename(file_path))
+      rsync(file_path, "#{server[:hostname]}:#{remote_dir}")
     end
 
     def rsync(from, to)
