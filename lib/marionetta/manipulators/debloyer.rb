@@ -51,7 +51,7 @@ module Marionetta
       end
 
       def send_deb()
-        cmd.put("#{ROOT_PATH}/gignite_1.0_amd64.deb", "/home/ubuntu")
+        cmd.put("#{ROOT_PATH}/#{deb_name}", "/home/ubuntu")
       end
 
       def apply_deb()
