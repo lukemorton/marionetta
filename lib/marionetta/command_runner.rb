@@ -5,6 +5,10 @@ module Marionetta
     def initialize(server)
       @server = server
     end
+    
+    def system(*args)
+      Kernel.system(*args)
+    end
 
     def get(local_dir, file)
       rsync("#{server[:hostname]}", local_dir)
