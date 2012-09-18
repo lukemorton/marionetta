@@ -15,7 +15,7 @@ module Marionetta
 
       :rsync => {
         :command => 'rsync',
-        :flags   => ["-azP", "--delete"],
+        :flags   => ['-azP', '--delete'],
       },
 
       :debloyer => {
