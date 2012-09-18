@@ -34,9 +34,18 @@ Continuing on from our example of defining a group of servers
 above, we will now iterate over the servers:
 
 ``` ruby
+# Each block executes in it's own asynchronous thread
 servers.each_server do |s|
-  # Run command on each server in parallel
-  Marionetta::CommandRunner.new(s).ssh('whoami')
+  cmd = Marionetta::CommandRunner.new(s)
+
+  # Send a command via SSH
+  cmd.ssh('whoami')
+
+  # Get a file
+  cmd.get('/var/backups/database')
+
+  # Put a file
+  cmd.put('/etc/motd')
 end
 ```
 
