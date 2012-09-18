@@ -36,7 +36,7 @@ above, we will now iterate over the servers:
 ``` ruby
 servers.each_server do |s|
   # Run command on each server in parallel
-  Marionetta::SSH.new(s).ssh('whoami')
+  Marionetta::CommandRunner.new(s).ssh('whoami')
 end
 ```
 
