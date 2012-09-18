@@ -5,8 +5,8 @@ module Marionetta
 
     def self.all()
       {
-        :debployer => Debloyer,
-        :puppet    => PuppetManipulator,
+        :debloyer => Debloyer,
+        :puppet   => PuppetManipulator,
       }
     end
 

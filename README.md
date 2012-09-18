@@ -112,7 +112,7 @@ staging.add_server do |s|
   s[:debloyer][:to] = '/home/staging/www'
 end
 
-staging.manipulate_each_server(:debployer, :deploy)
+staging.manipulate_each_server(:debloyer, :deploy)
 ```
 
 ## Author
