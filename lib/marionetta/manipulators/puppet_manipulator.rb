@@ -79,7 +79,7 @@ module Marionetta
       end
 
       def send_archive()
-        cmd.rsync('/tmp/puppet.tar.gz', "#{server[:hostname]}:/tmp")
+        cmd.put('/tmp/puppet.tar.gz')
       end
 
       def apply_archive()
