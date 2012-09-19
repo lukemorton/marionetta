@@ -85,8 +85,8 @@ staging = Marionetta::Group.new(:staging)
 
 staging.add_server do |s|
   s[:hostname] = 'staging.example.com'
-  s[:debloyer][:from] = '/my-app'
-  s[:debloyer][:to] = '/home/staging/www'
+  s[:deployer][:from] = '/my-app'
+  s[:deployer][:to] = '/home/staging/www'
 end
 
 staging.manipulate_each_server(:deployer, :deploy)
@@ -122,8 +122,8 @@ staging = Marionetta::Group.new(:staging)
 staging.add_server do |s|
   s[:hostname] = 'staging.example.com'
   s[:puppet][:manifest] = 'puppet/manifest.pp'
-  s[:debloyer][:from] = '/my-app'
-  s[:debloyer][:to] = '/home/staging/www'
+  s[:deployer][:from] = '/my-app'
+  s[:deployer][:to] = '/home/staging/www'
 end
 
 Marionetta::RakeHelper.new(staging).install_group_tasks

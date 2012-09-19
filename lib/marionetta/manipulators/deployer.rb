@@ -64,11 +64,11 @@ module Marionetta
       end
 
       def from_dir()
-        server[:debloyer][:from]
+        server[:deployer][:from]
       end
 
       def to_dir()
-        server[:debloyer][:to]
+        server[:deployer][:to]
       end
 
       def release_dir(release=nil)

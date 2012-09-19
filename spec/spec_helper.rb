@@ -15,6 +15,9 @@ def server()
     s[:ssh][:flags] = ['-i', ssh_key_path]
     s[:rsync][:flags] = ['-azP', '-e', "ssh -i #{ssh_key_path}", '--delete']
 
+    s[:deployer][:from] = File.dirname(__FILE__)+'/app'
+    s[:deployer][:to] = '/home/vagrant'
+
     s[:debloyer][:from] = File.dirname(__FILE__)+'/app'
     s[:debloyer][:to] = '/home/vagrant'
     s[:debloyer][:name] = 'test'

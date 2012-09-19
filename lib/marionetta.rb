@@ -29,6 +29,8 @@ module Marionetta
         :flags => ['-xvf'],
       },
 
+      :deployer => {},
+
       :debloyer => {
         :name => 'debloyer',
         :fpm => {
