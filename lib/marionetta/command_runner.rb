@@ -1,3 +1,5 @@
+require 'open4'
+
 module Marionetta
   class CommandRunner
     attr_reader :server
@@ -7,8 +9,15 @@ module Marionetta
     end
     
     def system(*args)
-      server[:logger].info(args.join(' '))
-      return Kernel.system(*args)
+      status = Open4::popen4(*args) do |pid, stdin, stdout, stderr|
+        yield stdout, stderr if block_given?
+
+        server[:logger].info(args.join(' '))
+        server[:logger].debug(stdout.read)
+        server[:logger].debug(stderr.read)
+      end
+      
+      return status.exitstatus == 0
     end
 
     def rsync(from, to)
