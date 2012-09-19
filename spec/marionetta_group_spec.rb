@@ -84,6 +84,8 @@ describe Marionetta::Group do
   it 'should manipulate each server' do
     vagrant = Marionetta::Group.new
     vagrant.add_server(server)
-    vagrant.manipulate_each_server(:puppet, :update)
+    vagrant.manipulate_each_server(:deployer, :releases) do |server, releases|
+      releases.length.should > 0
+    end
   end
 end
