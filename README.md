@@ -70,25 +70,6 @@ end
 servers.manipulate_each_server(:puppet, :update)
 ```
 
-## Using the debloyer
-
-Also included is a .deb deploying manipulator. You can use
-this to deploy your application over SSH as a .deb.
-
-``` ruby
-require 'marionetta/group'
-
-staging = Marionetta::Group.new(:staging)
-
-staging.add_server do |s|
-  s[:hostname] = 'staging.example.com'
-  s[:debloyer][:from] = '/my-app'
-  s[:debloyer][:to] = '/home/staging/www'
-end
-
-staging.manipulate_each_server(:debloyer, :deploy)
-```
-
 ## Using Marionetta in your Rakefile
 
 Marionetta provides an easy mechanism to generate rake tasks
@@ -112,9 +93,8 @@ end
 Marionetta::RakeHelper.new(staging).install_group_tasks
 ```
 
-The tasks `puppet:staging:install`, `puppet:staging:update`
-`debloyer:staging:deploy` will now be available in your
-Rakefile.
+The tasks `puppet:staging:install` and `puppet:staging:update`
+will now be available in your Rakefile.
 
 **Groups must have names if you want to generate rake tasks.**
 
