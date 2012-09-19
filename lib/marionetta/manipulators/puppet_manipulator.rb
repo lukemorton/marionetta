@@ -81,11 +81,8 @@ module Marionetta
       end
 
       def apply_archive()
-        cmds = [
-          'cd /tmp',
-          'tar xvfz puppet.tar.gz',
-          'cd puppet',
-        ]
+        cmd.ssh_extract('/tmp/puppet.tar.gz')
+        cmds = ['cd /tmp/puppet']
 
         puppet_cmd = 'sudo puppet apply '
 
