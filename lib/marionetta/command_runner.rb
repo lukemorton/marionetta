@@ -13,8 +13,11 @@ module Marionetta
         yield stdout, stderr if block_given?
 
         server[:logger].info(args.join(' '))
-        server[:logger].debug(stdout.read)
-        server[:logger].debug(stderr.read)
+
+        [stdout, stderr].each do |io|
+          str = io.read
+          server[:logger].debug(str) unless str.empty?
+        end
       end
       
       return status.exitstatus == 0
