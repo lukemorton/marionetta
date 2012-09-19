@@ -36,7 +36,7 @@ module Marionetta
       def releases(max = 10)
         releases = []
 
-        cmd.ssh("ls -m #{to_dir}/releases") do |stdout|
+        cmd.ssh("ls -m #{release_dir}") do |stdout|
           stdout.read.split(', ').each do |release|
             break if releases.length == 10
             releases << release.sub(/[,\s]/, '')
