@@ -24,16 +24,13 @@ module Marionetta
         unless cmd.ssh_extract(release_archive, release_dir)
           server[:logger].fatal(cmd.last)
           server[:logger].fatal('Could not extract archive')
+          exit(1)
         end
 
-        current_dir = "#{to_dir}/current"
-        unless cmd.ssh("ln -s #{release_dir} #{current_dir}")
-          server[:logger].fatal(cmd.last)
-          server[:logger].fatal('Could not symlink release as current')
-        end
+        symlink_release(release)
       end
 
-      def releases(max = 10)
+      def releases()
         releases = []
 
         cmd.ssh("ls -m #{release_dir}") do |stdout|
