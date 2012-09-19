@@ -12,6 +12,5 @@ describe Marionetta::RakeHelper do
 
     Rake::Task['puppet:vagrant:update'].invoke
     Rake::Task['deployer:vagrant:deploy'].invoke
-    Rake::Task['deployer:vagrant:releases'].invoke
   end
 end
