@@ -61,20 +61,19 @@ module Marionetta
       end
 
       def archive_files()
+        puppet_tmp = '/tmp/puppet'
+
         cmds = [
-          'rm -rf /tmp/puppet',
-          'mkdir /tmp/puppet',
-          "cp #{server[:puppet][:manifest]} /tmp/puppet/manifest.pp",
+          "rm -rf #{puppet_tmp}",
+          "mkdir #{puppet_tmp}",
+          "cp #{server[:puppet][:manifest]} #{puppet_tmp}/manifest.pp",
         ]
 
         if server[:puppet].has_key?(:modules)
-          cmds << "cp -r #{server[:puppet][:modules]} /tmp/puppet/modules"
+          cmds << "cp -r #{server[:puppet][:modules]} #{puppet_tmp}/modules"
         end
 
-        cmds << 'cd /tmp'
-        cmds << 'tar cvfz puppet.tar.gz puppet'
-
-        cmd.system(cmds.join(' && '))
+        cmd.archive(puppet_tmp)
       end
 
       def send_archive()
