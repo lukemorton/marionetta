@@ -53,9 +53,13 @@ module Marionetta
         end
       end
 
+      return_values = []
+
       futures.each do |f|
-        f.value
+        return_values << f.value
       end
+
+      return return_values
     end
 
     def manipulate_each_server(manipulator_name, method_name)
