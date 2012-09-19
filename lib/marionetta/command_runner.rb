@@ -75,8 +75,9 @@ module Marionetta
       archive_cmd = [
         server[:archive][:command],
         server[:archive][:flags],
-        directory,
         ['-f', save_to],
+        ['-C', File.dirname(directory)],
+        File.basename(directory),
       ]
 
       system(*archive_cmd.flatten)
