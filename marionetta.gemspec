@@ -6,9 +6,14 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/DrPheltRight/marionetta'
   s.authors     = ["Luke Morton"]
   s.email       = ["lukemorton.dev@gmail.com"]
-  s.summary     = Marionetta::DESCRIPTION
-  s.description = Marionetta::DESCRIPTION
-
+  s.summary     = "Provision using puppet and deploy your servers over SSH."
+  s.description = "Marionetta is a ruby library for executing commands to one
+                   or more remote machines via SSH. It provides puppet
+                   provisioning without the need for a puppet master and can
+                   also deploy your application code (with rollbacks) via
+                   rsync. With a RakeHelper you can integrate it into your
+                   workflow with ease."
+                   
   s.files       = `git ls-files`.split("\n")
   s.test_files  = `git ls-files -- spec/*`.split("\n")
   s.executables = `git ls-files -- bin/*`.split("\n").map {|f| File.basename(f)}
