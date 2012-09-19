@@ -49,5 +49,14 @@ describe Marionetta::CommandRunner do
     cmd.put('/tmp/lib.tar.gz')
     cmd.ssh_extract('/tmp/lib.tar.gz')
     cmd.ssh("[ -d /tmp/lib ]").should == true
+    cmd.ssh("[ -d /tmp/lib/lib ]").should_not == true
+  end
+
+  it 'should extract an archive over ssh into specific folder' do
+    cmd.archive(LIB, '/tmp')
+    cmd.put('/tmp/lib.tar.gz')
+    cmd.ssh_extract('/tmp/lib.tar.gz', '/tmp/other')
+    cmd.ssh("[ -d /tmp/other ]").should == true
+    cmd.ssh("[ -d /tmp/other/lib ]").should == true
   end
 end
