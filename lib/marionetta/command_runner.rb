@@ -22,6 +22,7 @@ module Marionetta
         end
       rescue
         server[:logger].fatal(args.join(' '))
+        server[:logger].fatal($!)
         exit(1)
       end
 
