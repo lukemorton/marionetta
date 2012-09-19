@@ -9,17 +9,22 @@ module Marionetta
     end
     
     def system(*args)
-      status = Open4::popen4(*args) do |pid, stdin, stdout, stderr|
-        yield stdout, stderr if block_given?
+      server[:logger].info(args.join(' '))
 
-        server[:logger].info(args.join(' '))
+      begin
+        status = Open4::popen4(*args) do |pid, stdin, stdout, stderr|
+          yield stdout, stderr if block_given?
 
-        [stdout, stderr].each do |io|
-          str = io.read
-          server[:logger].debug(str) unless str.empty?
+          [stdout, stderr].each do |io|
+            str = io.read
+            server[:logger].debug(str) unless str.empty?
+          end
         end
+      rescue
+        server[:logger].fatal(args.join(' '))
+        exit(1)
       end
-      
+
       return status.exitstatus == 0
     end
 
