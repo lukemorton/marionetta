@@ -119,7 +119,6 @@ module Marionetta
 
       def extract_archive_into_release_dir(release)
         release_archive = tmp_release_archive(release)
-        release_dir = release_dir(release)
 
         unless cmd.ssh_extract(release_archive, release_dir)
           fatal('Could not extract archive')
