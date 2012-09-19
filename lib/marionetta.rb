@@ -1,5 +1,5 @@
 module Marionetta
-  VERSION     = '0.3.1'
+  VERSION     = '0.3.2'
   DESCRIPTION = 'For lightweight puppet mastery. Organise
                  multiple machines via rsync and SSH rather
                  than using puppet master'
