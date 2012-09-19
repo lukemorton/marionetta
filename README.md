@@ -94,7 +94,7 @@ staging.manipulate_each_server(:deployer, :deploy)
 
 The deployer also supports listing releases:
 
-```
+``` ruby
 staging.manipulate_each_server(:deployer, :releases) do |server, releases|
   puts server[:hostname], releases
 end
@@ -102,7 +102,7 @@ end
 
 Oh and you can rollback to the last release too!
 
-```
+``` ruby
 staging.manipulate_each_server(:deployer, :rollback)
 ```
 
