@@ -89,19 +89,19 @@ module Marionetta
         cmd.ssh_extract('/tmp/puppet.tar.gz')
         cmds = ['cd /tmp/puppet']
 
-        puppet_cmd = 'sudo puppet apply '
+        puppet_cmd = ['sudo puppet apply']
 
         if server[:puppet].has_key?(:modules)
-          puppet_cmd += '--modulepath=/tmp/puppet/modules '
+          puppet_cmd << '--modulepath=/tmp/puppet/modules'
         end
 
-        puppet_cmd += 'manifest.pp'
+        puppet_cmd << 'manifest.pp'
 
         if server[:puppet].has_key?(:flags)
           puppet_cmd << server[:puppet][:flags]
         end
 
-        cmds << puppet_cmd
+        cmds << puppet_cmd.flatten.join(' ')
         
         cmd.ssh(cmds.join(' && '))
       end
