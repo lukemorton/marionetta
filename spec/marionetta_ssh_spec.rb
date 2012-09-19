@@ -6,6 +6,12 @@ def cmd()
 end
 
 describe Marionetta::CommandRunner do
+  it 'should provide stdout and stderr via block' do
+    cmd.system('whoami') do |stdout, stderr|
+      stdout.read.strip.should == ENV['USER']
+    end
+  end
+
   it 'should get file' do
     cmd.get('/etc/hostname', '/tmp/hosting')
     File.open('/tmp/hosting', 'rb').read.should == "precise64\n"
@@ -24,7 +30,7 @@ describe Marionetta::CommandRunner do
 
   it 'should run commands' do
     cmd.ssh('whoami') do |stdout, stderr|
-      stdout.read.should == "vagrant\n"
+      stdout.read.strip.should == 'vagrant'
     end
   end
 
