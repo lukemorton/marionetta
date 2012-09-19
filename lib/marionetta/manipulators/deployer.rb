@@ -13,6 +13,16 @@ module Marionetta
         @server = server
       end
 
+      def can?()
+        d = server[:deployer]
+        
+        if d.has_key?(:from) and d.has_key?(:to)
+          return true
+        else
+          return false
+        end
+      end
+
       def deploy()
         release = timestamp
         create_tmp_release_dir(release)

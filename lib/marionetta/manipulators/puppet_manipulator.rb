@@ -13,6 +13,10 @@ module Marionetta
         @server = server
       end
 
+      def can?()
+        server[:puppet].has_key?(:manifest)
+      end
+
       def install()
         install_deb_repo
         install_deb

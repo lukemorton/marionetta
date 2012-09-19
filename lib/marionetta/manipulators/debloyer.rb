@@ -13,6 +13,16 @@ module Marionetta
         @server = server
       end
 
+      def can?()
+        d = server[:debloyer]
+        
+        if d.has_key?(:from) and d.has_key?(:to)
+          return true
+        else
+          return false
+        end
+      end
+
       def deploy()
         deb_path = create_deb_path
         build_deb(deb_path)
