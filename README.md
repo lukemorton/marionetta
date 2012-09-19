@@ -72,6 +72,40 @@ end
 servers.manipulate_each_server(:puppet, :update)
 ```
 
+## Using the deployer
+
+Also included is a deployment mechanism similar to capistrano.
+You can use this to deploy releases of folders from a local
+machine to a remote one over SSH.
+
+``` ruby
+require 'marionetta/group'
+
+staging = Marionetta::Group.new(:staging)
+
+staging.add_server do |s|
+  s[:hostname] = 'staging.example.com'
+  s[:debloyer][:from] = '/my-app'
+  s[:debloyer][:to] = '/home/staging/www'
+end
+
+staging.manipulate_each_server(:deployer, :deploy)
+```
+
+The deployer also supports listing releases:
+
+```
+staging.manipulate_each_server(:deployer, :releases) do |server, releases|
+  puts server[:hostname], releases
+end
+```
+
+Oh and you can rollback to the last release too!
+
+```
+staging.manipulate_each_server(:deployer, :rollback)
+```
+
 ## Using Marionetta in your Rakefile
 
 Marionetta provides an easy mechanism to generate rake tasks
@@ -95,7 +129,8 @@ end
 Marionetta::RakeHelper.new(staging).install_group_tasks
 ```
 
-The tasks `puppet:staging:install` and `puppet:staging:update`
+The tasks `puppet:staging:install`, `puppet:staging:update`,
+`deployer:staging:deploy` and `deployer:staging:rollback`
 will now be available in your Rakefile.
 
 **Groups must have names if you want to generate rake tasks.**
