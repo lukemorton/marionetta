@@ -36,7 +36,7 @@ module Marionetta
         cmd.ssh("ls -m #{release_dir}") do |stdout|
           stdout.read.split(', ').each do |release|
             break if releases.length == 10
-            releases << release.sub(/[,\s]/, '')
+              releases << release.sub(',', '').strip()
           end
         end
 
