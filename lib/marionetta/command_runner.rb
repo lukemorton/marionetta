@@ -75,8 +75,8 @@ module Marionetta
       archive_cmd = [
         server[:archive][:command],
         server[:archive][:flags],
-        save_to,
         directory,
+        ['-f', save_to],
       ]
 
       system(*archive_cmd.flatten)
@@ -91,7 +91,7 @@ module Marionetta
       extract_cmd = [
         server[:extract][:command],
         server[:extract][:flags],
-        archive_path,
+        ['-f', archive_path],
       ]
 
       cmds << extract_cmd.flatten.join(' ')
