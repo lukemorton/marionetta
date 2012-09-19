@@ -16,10 +16,10 @@ describe Marionetta::Manipulators::Deployer do
     deployer.deploy
     cmd.ssh("[ -d ~/app/current ]").should == true
     cmd.ssh("[ -d ~/app/releases ]").should == true
-    cmd.ssh("[ -d ~/app/current/app.rb ]").should == true
-    cmd.ssh("[ -d ~/app/current/exclude.txt ]").should_not == true
-    cmd.ssh("[ -d ~/app/current/exclude/another.txt ]").should_not == true
-    cmd.ssh("[ -d ~/app/current/leave-me-out.txt ]").should_not == true
+    cmd.ssh("[ -f ~/app/current/app.rb ]").should == true
+    cmd.ssh("[ -f ~/app/current/exclude.txt ]").should_not == true
+    cmd.ssh("[ -f ~/app/current/exclude/another.txt ]").should_not == true
+    cmd.ssh("[ -f ~/app/current/leave-me-out.txt ]").should_not == true
   end
 
   it 'should list releases' do
