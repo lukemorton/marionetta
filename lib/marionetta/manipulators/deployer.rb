@@ -15,19 +15,10 @@ module Marionetta
 
       def deploy()
         release = timestamp
-        release_archive = "/tmp/#{release}.tar.gz"
-        cmd.archive(from_dir, release_archive)
-        cmd.put(release_archive)
-
-        release_dir = release_dir(release)
-
-        unless cmd.ssh_extract(release_archive, release_dir)
-          server[:logger].fatal(cmd.last)
-          server[:logger].fatal('Could not extract archive')
-          exit(1)
-        end
-
-        symlink_release(release)
+        create_tmp_release_dir(release)
+        send_tmp_release_dir_as_archive(release)
+        extract_archive_into_release_dir(release)
+        symlink_release_dir(release)
       end
 
       def releases()
@@ -51,7 +42,7 @@ module Marionetta
           current_release_dir = release_dir(releases.last)
           skip_current_release_dir = release_dir("skip-#{releases.last}")
           cmd.ssh("mv #{current_release_dir} #{skip_current_release_dir}")
-          symlink_release(rollback_to_release)
+          symlink_release_dir(rollback_to_release)
         end
       end
 
@@ -65,6 +56,14 @@ module Marionetta
 
       def from_dir()
         server[:deployer][:from]
+      end
+
+      def tmp_release_dir(release)
+        "/tmp/#{release}"
+      end
+
+      def tmp_release_archive(release)
+        "/tmp/#{release}.tar.gz"
       end
 
       def to_dir()
@@ -81,7 +80,28 @@ module Marionetta
         "#{to_dir}/current"
       end
 
-      def symlink_release(release)
+      def create_tmp_release_dir(release)
+        cmd.system("cp -r #{from_dir} #{tmp_release_dir(release)}")
+      end
+
+      def send_tmp_release_dir_as_archive(release)
+        release_archive = tmp_release_archive(release) 
+        cmd.archive(tmp_release_dir(release), release_archive)
+        cmd.put(release_archive)
+      end
+
+      def extract_archive_into_release_dir(release)
+        release_archive = tmp_release_archive(release)
+        release_dir = release_dir(release)
+
+        unless cmd.ssh_extract(release_archive, release_dir)
+          server[:logger].fatal(cmd.last)
+          server[:logger].fatal('Could not extract archive')
+          exit(1)
+        end
+      end
+
+      def symlink_release_dir(release)
         release_dir = release_dir(release)
 
         unless cmd.ssh("rm -rf #{current_dir} && ln -s #{release_dir} #{current_dir}")
