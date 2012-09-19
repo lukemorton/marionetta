@@ -77,6 +77,7 @@ module Marionetta
           cmds << "cp -r #{server[:puppet][:modules]} #{puppet_tmp}/modules"
         end
 
+        cmd.system(cmds.join(' && '))
         cmd.archive(puppet_tmp)
       end
 
