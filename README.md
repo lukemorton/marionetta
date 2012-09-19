@@ -39,7 +39,9 @@ servers.each_server do |s|
   cmd = Marionetta::CommandRunner.new(s)
 
   # Send a command via SSH
-  cmd.ssh('whoami')
+  cmd.ssh('whoami') do |out, err|
+    puts out.read
+  end
 
   # Get a file
   cmd.get('/var/backups/database')
