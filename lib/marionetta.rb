@@ -20,13 +20,13 @@ module Marionetta
 
       :archive => {
         :command => 'tar',
-        :flags => ['-zvcf'],
+        :flags => ['-zvc'],
         :ext => 'tar.gz',
       },
 
       :extract => {
         :command => 'tar',
-        :flags => ['-xvf'],
+        :flags => ['-xv'],
       },
 
       :deployer => {},
