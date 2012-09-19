@@ -90,6 +90,12 @@ module Marionetta
         "#{to_dir}/current"
       end
 
+      def fatal(message)
+        server[:logger].fatal(cmd.last)
+        server[:logger].fatal(message)
+        exit(1)
+      end
+
       def create_tmp_release_dir(release)
         tmp_release_dir = tmp_release_dir(release)
         cmd.system("cp -r #{from_dir} #{tmp_release_dir}")
@@ -105,9 +111,7 @@ module Marionetta
         release_archive = tmp_release_archive(release) 
         
         unless cmd.archive(tmp_release_dir(release), release_archive)
-          server[:logger].fatal(cmd.last)
-          server[:logger].fatal('Could not create archive')
-          exit(1)
+          fatal('Could not create archive')
         end
 
         cmd.put(release_archive)
@@ -118,9 +122,7 @@ module Marionetta
         release_dir = release_dir(release)
 
         unless cmd.ssh_extract(release_archive, release_dir)
-          server[:logger].fatal(cmd.last)
-          server[:logger].fatal('Could not extract archive')
-          exit(1)
+          fatal('Could not extract archive')
         end
       end
 
@@ -128,9 +130,7 @@ module Marionetta
         release_dir = release_dir(release)
 
         unless cmd.ssh("rm #{current_dir} && ln -s #{release_dir} #{current_dir}")
-          server[:logger].fatal(cmd.last)
-          server[:logger].fatal('Could not symlink release as current')
-          exit(1)
+          fatal('Could not symlink release as current')
         end
       end
 
