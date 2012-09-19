@@ -3,13 +3,15 @@ require 'open4'
 module Marionetta
   class CommandRunner
     attr_reader :server
+    attr_reader :last
 
     def initialize(server)
       @server = server
     end
     
     def system(*args)
-      server[:logger].info(args.join(' '))
+      @last = args.join(' ')
+      server[:logger].info(last)
 
       begin
         status = Open4::popen4(*args) do |pid, stdin, stdout, stderr|
