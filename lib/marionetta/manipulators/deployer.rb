@@ -24,11 +24,15 @@ module Marionetta
       end
 
       def deploy()
+        run_script(:before)
+
         release = timestamp
         create_tmp_release_dir(release)
         send_tmp_release_dir_as_archive(release)
         extract_archive_into_release_dir(release)
         symlink_release_dir(release)
+
+        run_script(:after)
       end
 
       def releases()
@@ -94,6 +98,17 @@ module Marionetta
         server[:logger].fatal(cmd.last)
         server[:logger].fatal(message)
         exit(1)
+      end
+
+      def run_script(script)
+        script_key = "#{script}_script".to_sym
+
+        if server[:deployer].has_key?(script_key)
+          script = server[:deployer][script_key]
+          cmd.put(script, '/tmp')
+          tmp_script = "/tmp/#{File.basename(script)}"
+          cmd.ssh("chmod +x #{tmp_script} && exec #{tmp_script}")
+        end
       end
 
       def create_tmp_release_dir(release)
