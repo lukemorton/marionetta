@@ -35,7 +35,9 @@ module Marionetta
 
         cmd.ssh("ls -m #{release_dir}") do |stdout|
           stdout.read.split(', ').each do |release|
+            unless release.index('skip-') == 0
               releases << release.sub(',', '').strip()
+            end
           end
         end
 
@@ -43,6 +45,16 @@ module Marionetta
       end
 
       def rollback()
+        rollback_to_release = releases[-2]
+
+        if rollback_to_release.nil?
+          server[:logger].warn('No release to rollback to')
+        else
+          current_release_dir = release_dir(releases.last)
+          skip_current_release_dir = release_dir("skip-#{releases.last}")
+          cmd.ssh("mv #{current_release_dir} #{skip_current_release_dir}")
+          symlink_release(rollback_to_release)
+        end
       end
 
     private
