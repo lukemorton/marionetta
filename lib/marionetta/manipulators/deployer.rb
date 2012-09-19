@@ -67,6 +67,20 @@ module Marionetta
         return dir
       end
 
+      def current_dir()
+        "#{to_dir}/current"
+      end
+
+      def symlink_release(release)
+        release_dir = release_dir(release)
+
+        unless cmd.ssh("rm -rf #{current_dir} && ln -s #{release_dir} #{current_dir}")
+          server[:logger].fatal(cmd.last)
+          server[:logger].fatal('Could not symlink release as current')
+          exit(1)
+        end
+      end
+
       def timestamp()
         Time.new.strftime('%F_%T')
       end
