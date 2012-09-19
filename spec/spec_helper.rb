@@ -23,6 +23,7 @@ def server()
   s[:deployer][:from] = app_dir
   s[:deployer][:to] = '~/app'
   s[:deployer][:exclude] = ['exclud*', 'before', 'after']
+  s[:deployer][:after_script] = "#{app_dir}/after"
 
   s[:debloyer][:from] = app_dir
   s[:debloyer][:to] = '~/app-deb'
