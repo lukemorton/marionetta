@@ -129,7 +129,7 @@ module Marionetta
       def symlink_release_dir(release)
         release_dir = release_dir(release)
 
-        unless cmd.ssh("rm #{current_dir} && ln -s #{release_dir} #{current_dir}")
+        unless cmd.ssh("rm -f #{current_dir} && ln -s #{release_dir} #{current_dir}")
           fatal('Could not symlink release as current')
         end
       end
