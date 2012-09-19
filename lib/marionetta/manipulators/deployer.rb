@@ -103,7 +103,13 @@ module Marionetta
 
       def send_tmp_release_dir_as_archive(release)
         release_archive = tmp_release_archive(release) 
-        cmd.archive(tmp_release_dir(release), release_archive)
+        
+        unless cmd.archive(tmp_release_dir(release), release_archive)
+          server[:logger].fatal(cmd.last)
+          server[:logger].fatal('Could not create archive')
+          exit(1)
+        end
+
         cmd.put(release_archive)
       end
 
