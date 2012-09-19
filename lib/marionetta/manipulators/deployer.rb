@@ -19,7 +19,8 @@ module Marionetta
         cmd.archive(from_dir, release_archive)
         cmd.put(release_archive)
 
-        release_dir = "#{to_dir}/releases/#{release}"
+        release_dir = release_dir(release)
+
         unless cmd.ssh_extract(release_archive, release_dir)
           server[:logger].fatal(cmd.last)
           server[:logger].fatal('Could not extract archive')
@@ -62,6 +63,12 @@ module Marionetta
 
       def to_dir()
         server[:debloyer][:to]
+      end
+
+      def release_dir(release=nil)
+        dir = "#{to_dir}/releases"
+        dir << "/#{release}" unless release.nil?
+        return dir
       end
 
       def timestamp()
