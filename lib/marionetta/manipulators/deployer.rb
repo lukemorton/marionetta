@@ -4,7 +4,7 @@ module Marionetta
   module Manipulators
     class Deployer
       def self.tasks()
-        [:deploy, :releases, :rollback]
+        [:deploy, :rollback]
       end
       
       attr_writer :cmd
