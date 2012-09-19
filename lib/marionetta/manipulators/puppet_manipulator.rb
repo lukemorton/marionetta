@@ -97,8 +97,8 @@ module Marionetta
 
         puppet_cmd += 'manifest.pp'
 
-        if server[:puppet].has_key?(:options)
-          puppet_cmd += " #{server[:puppet][:options]}"
+        if server[:puppet].has_key?(:flags)
+          puppet_cmd << server[:puppet][:flags]
         end
 
         cmds << puppet_cmd
