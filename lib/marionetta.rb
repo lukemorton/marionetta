@@ -24,7 +24,7 @@
 # [author]: http://lukemorton.co.uk
 # [github]: https://github.com/DrPheltRight/marionetta
 module Marionetta
-  VERSION = '0.3.2'
+  VERSION = '0.3.3'
 
   # In order to connect to servers you must define configs for
   # each. This method provides a default map describing some
