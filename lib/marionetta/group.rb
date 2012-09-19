@@ -65,7 +65,7 @@ module Marionetta
     def manipulate_each_server(manipulator_name, method_name)
       each_server do |s|
         manipulator = Manipulators[manipulator_name].new(s)
-        manipulator.method(method_name).call()
+        yield s, manipulator.method(method_name).call() if block_given?
       end
     end
   end
