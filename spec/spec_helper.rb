@@ -22,7 +22,7 @@ def server()
 
   s[:deployer][:from] = app_dir
   s[:deployer][:to] = '~/app'
-  s[:deployer][:exclude] = ['exclud*', 'leave-me-out.txt']
+  s[:deployer][:exclude] = ['exclud*', 'before', 'after']
 
   s[:debloyer][:from] = app_dir
   s[:debloyer][:to] = '~/app-deb'
