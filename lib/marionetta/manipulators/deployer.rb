@@ -91,7 +91,14 @@ module Marionetta
       end
 
       def create_tmp_release_dir(release)
-        cmd.system("cp -r #{from_dir} #{tmp_release_dir(release)}")
+        tmp_release_dir = tmp_release_dir(release)
+        cmd.system("cp -r #{from_dir} #{tmp_release_dir}")
+
+        if server[:deployer].has_key?(:exclude)
+          exclude_files = server[:deployer][:exclude]
+          exclude_files.map! {|f| "#{tmp_release_dir}/#{f}"}
+          cmd.system("rm -rf #{exclude_files.join(' ')}")
+        end
       end
 
       def send_tmp_release_dir_as_archive(release)

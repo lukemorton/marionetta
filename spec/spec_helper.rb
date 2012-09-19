@@ -8,23 +8,29 @@ env = Vagrant::Environment.new(:cwd => File.dirname(__FILE__)+'/vagrant')
 env.cli('up')
 
 def server()
-    s = Marionetta.default_server
+  s = Marionetta.default_server
 
-    s[:hostname] = 'vagrant@192.168.33.11'
-    ssh_key_path = File.dirname(__FILE__)+'/vagrant/key'
-    s[:ssh][:flags] = ['-i', ssh_key_path]
-    s[:rsync][:flags] = ['-azP', '-e', "ssh -i #{ssh_key_path}", '--delete']
+  # s[:logger].level = Logger::INFO
 
-    s[:deployer][:from] = File.dirname(__FILE__)+'/app'
-    s[:deployer][:to] = '/home/vagrant'
+  s[:hostname] = 'vagrant@192.168.33.11'
 
-    s[:debloyer][:from] = File.dirname(__FILE__)+'/app'
-    s[:debloyer][:to] = '/home/vagrant'
-    s[:debloyer][:name] = 'test'
+  ssh_key_path = File.dirname(__FILE__)+'/vagrant/key'
+  s[:ssh][:flags] = ['-i', ssh_key_path]
+  s[:rsync][:flags] = ['-azP', '-e', "ssh -i #{ssh_key_path}", '--delete']
 
-    s[:puppet] = {
-      :manifest => File.dirname(__FILE__)+'/puppet/manifest.pp',
-    }
+  app_dir = File.dirname(__FILE__)+'/app'
 
-    return s
+  s[:deployer][:from] = app_dir
+  s[:deployer][:to] = '~/app'
+  s[:deployer][:exclude] = ['exclud*', 'leave-me-out.txt']
+
+  s[:debloyer][:from] = app_dir
+  s[:debloyer][:to] = '~/app-deb'
+  s[:debloyer][:name] = 'test'
+
+  s[:puppet] = {
+    :manifest => File.dirname(__FILE__)+'/puppet/manifest.pp',
+  }
+
+  return s
 end
