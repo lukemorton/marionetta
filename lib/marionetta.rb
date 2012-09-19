@@ -1,6 +1,43 @@
+# Marionetta is a ruby library for executing commands to one
+# or more remote machines via SSH.
+# 
+# It provides puppet provisioning without the need for a
+# puppet master and can also deploy your application code
+# (with rollbacks) via rsync. With a RakeHelper you can
+# integrate it into your workflow with ease.
+# 
+# Installing the gem is the best way to start using
+# Marionetta. You can do this from command line:
+# 
+#   gem install marionetta
+# 
+# Or – better yet – in your Gemfile:
+# 
+#   source "http://rubygems.org"
+#   gem 'marionetta'
+# 
+# Marionetta is written by [Luke Morton][author] and licensed
+# under the MIT license. The project is [hosted on github][github]
+# where you can report issues and send your well thought out
+# pull requests.
+# 
+# [author]: http://lukemorton.co.uk
+# [github]: https://github.com/DrPheltRight/marionetta
 module Marionetta
   VERSION = '0.3.2'
 
+  # In order to connect to servers you must define configs for
+  # each. This method provides a default map describing some
+  # common settings including command binaries, default flags
+  # and more.
+  # 
+  # One interesting this to note is a logger is set, pointing
+  # to `STDOUT`.
+  # 
+  # Do not get too caught up in this method, it is called
+  # elsewhere in Marionetta where you can better define your
+  # servers. You should consult this method in order to see
+  # the defaults.
   def self.default_server()
     {
       :logger => Logger.new($stdout),
