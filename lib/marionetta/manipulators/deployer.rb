@@ -34,10 +34,8 @@ module Marionetta
         releases = []
 
         cmd.ssh("ls -m #{release_dir}") do |stdout|
-          stdout.read.split(', ').each do |release|
-            unless release.index('skip-') == 0
-              releases << release.sub(',', '').strip()
-            end
+          stdout.read.split(/[,\s]+/).each do |release|
+            releases << release unless release.index('skip-') == 0
           end
         end
 
