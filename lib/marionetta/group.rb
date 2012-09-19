@@ -65,8 +65,14 @@ module Marionetta
     def manipulate_each_server(manipulator_name, method_name)
       each_server do |s|
         manipulator = Manipulators[manipulator_name].new(s)
-        return_val = manipulator.method(method_name).call()
-        yield s, return_val if block_given?
+
+        if manipulator.can?
+          return_val = manipulator.method(method_name).call()
+          yield s, return_val if block_given?
+        else
+          s[:logger].warn(
+            "Could not Manipulators[:#{:manipulator}].#{method_name}()")
+        end
       end
     end
   end
