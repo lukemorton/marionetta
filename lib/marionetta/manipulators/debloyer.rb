@@ -5,6 +5,7 @@
 # another system!
 # 
 # **This class is deprecated please take a look at `Deployer`.**
+# 
 require 'marionetta/command_runner'
 
 module Marionetta
