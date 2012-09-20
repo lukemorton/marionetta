@@ -31,7 +31,7 @@ module Marionetta
   ### Defining Servers
 
   # In order to connect to servers you must define configs for
-  # each. This method provides a default map describing some
+  # each. This method provides a default hash describing some
   # common settings including command binaries, default flags
   # and more.
   # 
