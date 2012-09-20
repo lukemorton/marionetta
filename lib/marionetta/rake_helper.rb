@@ -4,9 +4,9 @@ require 'rake'
 
 module Marionetta
   module RakeHelper
-    extend self
-
     include ::Rake::DSL if defined?(::Rake::DSL)
+    
+    extend self
 
     def install_group_tasks(group)
       install_group_tasks_for(group)
