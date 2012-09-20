@@ -37,6 +37,7 @@ staging = Marionetta::Group.new(:staging)
 
 staging.add_server do |s|
   s[:hostname] = 'staging.example.com'
+  s[:ssh][:flags] << ['-i', 'keys/private.key']
   s[:puppet][:manifest] = 'puppet/manifest.pp'
   s[:deployer][:from] = '/my-app'
   s[:deployer][:to] = '/home/staging/www'
