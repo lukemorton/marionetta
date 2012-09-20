@@ -1,3 +1,10 @@
+# `Debloyer` was a way of deploying your application using
+# .deb files. However I quickly realised using the .deb format
+# was limiting since you can only install them on debian and
+# ubuntu. Also it's an inefficient way of copying a folder to
+# another system!
+# 
+# **This class is deprecated please take a look at `Deployer`.**
 require 'marionetta/command_runner'
 
 module Marionetta
