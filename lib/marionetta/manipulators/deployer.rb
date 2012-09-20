@@ -98,10 +98,10 @@ module Marionetta
         return releases
       end
 
-
       # If you push out and need to rollback to the previous
       # version you can use `.rollback()` to do just that.
       # Currently you can only rollback once at a time.
+      # 
       def rollback()
         rollback_to_release = releases[-2]
 
@@ -119,6 +119,7 @@ module Marionetta
 
       # To use your own alternative to `CommandRunner` you can
       # set an object of your choice via the `.cmd=` method.
+      # 
       attr_writer :cmd
 
     private
