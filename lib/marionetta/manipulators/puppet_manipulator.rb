@@ -64,9 +64,11 @@ module Marionetta
         cmd.ssh("which puppet || { #{install_cmd}; }")
       end
 
-      def archive_files()
-        puppet_tmp = '/tmp/puppet'
+      def puppet_tmp()
+        '/tmp/puppet'
+      end
 
+      def archive_files()
         cmds = [
           "rm -rf #{puppet_tmp}",
           "mkdir #{puppet_tmp}",
@@ -82,12 +84,12 @@ module Marionetta
       end
 
       def send_archive()
-        cmd.put('/tmp/puppet.tar.gz')
+        cmd.put("#{puppet_tmp}.tar.gz")
       end
 
       def apply_archive()
-        cmd.ssh_extract('/tmp/puppet.tar.gz')
-        cmds = ['cd /tmp/puppet']
+        cmd.ssh_extract("#{puppet_tmp}.tar.gz")
+        cmds = ["cd #{puppet_tmp}"]
 
         puppet_cmd = ['sudo puppet apply']
 
