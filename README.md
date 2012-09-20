@@ -59,7 +59,7 @@ of servers:
 ``` ruby
 require 'marionetta/group'
 
-servers = Marionetta::Group.new
+servers = Marionetta::Group.new(:production)
 
 servers.add_server do |s|
   s[:hostname] = 'ubuntu@example.com'
@@ -102,7 +102,7 @@ Marionetta to orchestrate a number instances.
 ``` ruby
 require 'marionetta/group'
 
-servers = Marionetta::Group.new
+servers = Marionetta::Group.new(:production)
 
 servers.add_server do |s|
   s[:hostname] = 'ubuntu@example.com'
