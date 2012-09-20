@@ -6,8 +6,6 @@ module Marionetta
       def self.tasks()
         [:install, :update]
       end
-
-      attr_writer :cmd
       
       def initialize(server)
         @server = server
@@ -32,6 +30,8 @@ module Marionetta
         send_archive
         apply_archive
       end
+
+      attr_writer :cmd
 
     private
     
