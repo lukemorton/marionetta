@@ -42,6 +42,10 @@ module Marionetta
   # elsewhere in Marionetta where you can better define your
   # servers. You should consult this method in order to see
   # the defaults.
+  # 
+  # Any place in this library you see a variable called
+  # `server` you can be certain it is a server hash.
+  # 
   def self.default_server()
     {
       :logger => Logger.new($stdout),
