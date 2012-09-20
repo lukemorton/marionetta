@@ -22,6 +22,33 @@ source 'http://rubygems.org'
 gem 'marionetta'
 ```
 
+## Using Marionetta in your Rakefile
+
+Marionetta provides an easy mechanism to generate rake tasks
+for each of your groups.
+
+In your Rakefile you can do something like so:
+
+``` ruby
+require 'marionetta/group'
+require 'marionetta/rake_helper'
+
+staging = Marionetta::Group.new(:staging)
+
+staging.add_server do |s|
+  s[:hostname] = 'staging.example.com'
+  s[:puppet][:manifest] = 'puppet/manifest.pp'
+  s[:deployer][:from] = '/my-app'
+  s[:deployer][:to] = '/home/staging/www'
+end
+
+Marionetta::RakeHelper.install_group_tasks(staging)
+```
+
+The tasks `puppet:staging:install`, `puppet:staging:update`,
+`deployer:staging:deploy` and `deployer:staging:rollback`
+will now be available in your Rakefile.
+
 ## Defining a group of servers
 
 Marionetta allows you to describe and manipulate a number of
@@ -120,35 +147,6 @@ Oh and you can rollback to the last release too!
 ``` ruby
 staging.manipulate_each_server(:deployer, :rollback)
 ```
-
-## Using Marionetta in your Rakefile
-
-Marionetta provides an easy mechanism to generate rake tasks
-for each of your groups.
-
-In your Rakefile you can do something like so:
-
-``` ruby
-require 'marionetta/group'
-require 'marionetta/rake_helper'
-
-staging = Marionetta::Group.new(:staging)
-
-staging.add_server do |s|
-  s[:hostname] = 'staging.example.com'
-  s[:puppet][:manifest] = 'puppet/manifest.pp'
-  s[:deployer][:from] = '/my-app'
-  s[:deployer][:to] = '/home/staging/www'
-end
-
-Marionetta::RakeHelper.install_group_tasks(staging)
-```
-
-The tasks `puppet:staging:install`, `puppet:staging:update`,
-`deployer:staging:deploy` and `deployer:staging:rollback`
-will now be available in your Rakefile.
-
-**Groups must have names if you want to generate rake tasks.**
 
 ## Author
 
