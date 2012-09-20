@@ -39,7 +39,7 @@ end
 
 servers.add_server do |s|
   s[:hostname] = 'another@host.com'
-  s[:ssh][:flags] = ['-i', 'keys/private.key']
+  s[:ssh][:flags] << ['-i', 'keys/private.key']
 end
 ```
 
