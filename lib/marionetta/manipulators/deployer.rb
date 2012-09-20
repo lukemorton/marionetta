@@ -15,8 +15,9 @@ module Marionetta
       # `Deployer` provides two rake tasks when used with
       # `RakeHelper` namely `:deploy` and `:rollback`. When
       # applied through `RakeHelper` they will appear
-      # namespaced under `:deployer` and your group name. With
-      # a group name of `:staging` would appear as:
+      # namespaced under `:deployer` and your group name.
+      # 
+      # With a group name of `:staging` would appear as:
       # 
       #     deployer:staging:deploy
       #     deployer:staging:rollback
