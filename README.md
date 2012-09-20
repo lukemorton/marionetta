@@ -1,10 +1,25 @@
 # Marionetta
 
-A small ruby library for executing remote commands on a number
-of servers. Comes with puppet mastery built in.
+Marionetta is a ruby library for executing commands to one
+or more remote machines via SSH.
+
+It provides puppet provisioning without the need for a puppet
+master and can also deploy your application code (with
+rollbacks) via rsync. With a RakeHelper you can integrate it
+into your workflow with ease.
+
+Installing the gem is the best way to start using Marionetta.
+You can do this from command line:
 
 ```
 gem install marionetta
+```
+
+Or – better yet – in your Gemfile:
+
+``` ruby
+source "http://rubygems.org"
+gem 'marionetta'
 ```
 
 ## Defining a group of servers
