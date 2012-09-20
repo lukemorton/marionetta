@@ -34,11 +34,11 @@ task(:publish => :gem) do
   system(cmd.join(' && '))
 end
 
-task(:docs) do
+task(:doc) do
   docs_cmd = [
     'rm -rf docs',
     'cd lib',
-    'rocco -o ../docs -l ruby marionetta.rb',
+    'rocco -o ../docs -l ruby {*,*/*,*/*/*}.rb',
   ]
   system(docs_cmd.join(' && '))
 end
