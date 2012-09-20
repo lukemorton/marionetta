@@ -65,7 +65,7 @@ module Marionetta
       end
 
       def puppet_tmp()
-        '/tmp/puppet'
+        "/tmp/puppet_#{server[:hostname]}"
       end
 
       def archive_files()
