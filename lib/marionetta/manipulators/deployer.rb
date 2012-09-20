@@ -25,9 +25,7 @@ module Marionetta
 
       def deploy()
         release = timestamp
-
         create_tmp_release_dir(release)
-
         cmd.ssh("mkdir -p #{release_dir}")
 
         unless cmd.put(tmp_release_dir(release), release_dir)
