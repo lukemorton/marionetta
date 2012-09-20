@@ -28,8 +28,11 @@ module Marionetta
 
         release = timestamp
         create_tmp_release_dir(release)
-        send_tmp_release_dir_as_archive(release)
-        extract_archive_into_release_dir(release)
+
+        unless cmd.put(tmp_release_dir(release), release_dir)
+          fatal('Could not rsync release')
+        end
+
         symlink_release_dir(release)
 
         run_script(:after)
@@ -119,24 +122,6 @@ module Marionetta
           exclude_files = server[:deployer][:exclude]
           exclude_files.map! {|f| "#{tmp_release_dir}/#{f}"}
           cmd.system("rm -rf #{exclude_files.join(' ')}")
-        end
-      end
-
-      def send_tmp_release_dir_as_archive(release)
-        release_archive = tmp_release_archive(release) 
-        
-        unless cmd.archive(tmp_release_dir(release), release_archive)
-          fatal('Could not create archive')
-        end
-
-        cmd.put(release_archive)
-      end
-
-      def extract_archive_into_release_dir(release)
-        release_archive = tmp_release_archive(release)
-
-        unless cmd.ssh_extract(release_archive, release_dir)
-          fatal('Could not extract archive')
         end
       end
 
