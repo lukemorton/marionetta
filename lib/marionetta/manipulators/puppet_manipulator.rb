@@ -1,36 +1,82 @@
+# `PuppetManipulator` copies a puppet manifest and optionally
+# modules to a remote machine and applies them.
+# 
+# You could do this with a puppet master instance, and that
+# could (and most likely is) the right option for you. However
+# if you do not want to host an additional node as your puppet
+# master or want to push changes from your machine directly to
+# nodes them this class maybe what you're looking for.
+# 
 require 'marionetta/command_runner'
 
 module Marionetta
   module Manipulators
     class PuppetManipulator
+
+      ### RakeHelper tasks
+
+      # `PupperManipulator` provides two rake tasks when used
+      # with `RakeHelper` namely `:install` and `:update`. 
+      # When applied through `RakeHelper` they will appear
+      # namespaced under `:puppet` and your group name.
+      #
+      # With a group name of `:staging` would appear as:
+      # 
+      #     puppet:staging:install
+      #     puppet:staging:update
+      # 
       def self.tasks()
         [:install, :update]
       end
-      
+
+      ### Server hash requirements
+
+      # The key `[:puppet][:manifest]` must be set in your
+      # `server` hash in order for `PuppetManipulator` to
+      # function correctly.
+      # 
       def initialize(server)
         @server = server
       end
 
+      # Call `.can?()` to check if the `:manifest` key has
+      # been set in the `server[:puppet]`.
+      # 
       def can?()
         server[:puppet].has_key?(:manifest)
       end
 
+      ### Installing puppet
+
+      # `PuppetManipulator` provides the `.install()` method
+      # to install puppet on debian or ubuntu servers.
+      # 
       def install()
         install_deb_repo
         install_deb
       end
 
-      def installed?()
-        cmd.ssh('which puppet')
-      end
+      ### Updating puppet
 
+      # Use `.update()` to package up your manifest and
+      # optionally modules and send them to your remote
+      # machine. Once there they will be applied.
+      # 
+      # If puppet is not installed, we attempt to install it
+      # before applying the manifest.
+      # 
       def update()
         install unless installed?
         archive_files
         send_archive
         apply_archive
       end
+      
+      ### Dependency Injection
 
+      # To use your own alternative to `CommandRunner` you can
+      # set an object of your choice via the `.cmd=` method.
+      # 
       attr_writer :cmd
 
     private
@@ -39,6 +85,10 @@ module Marionetta
 
       def cmd()
         @cmd ||= CommandRunner.new(server)
+      end
+
+      def installed?()
+        cmd.ssh('which puppet')
       end
 
       def install_deb_repo()
