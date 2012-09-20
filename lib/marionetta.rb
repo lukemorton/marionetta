@@ -24,7 +24,7 @@
 # [author]: http://lukemorton.co.uk
 # [github]: https://github.com/DrPheltRight/marionetta
 module Marionetta
-  VERSION = '0.3.3'
+  VERSION = '0.3.4'
 
   ### Defining Servers
 
