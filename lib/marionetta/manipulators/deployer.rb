@@ -81,10 +81,6 @@ module Marionetta
         "/tmp/#{release}"
       end
 
-      def tmp_release_archive(release)
-        "/tmp/#{release}.tar.gz"
-      end
-
       def to_dir()
         server[:deployer][:to]
       end
