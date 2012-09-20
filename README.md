@@ -1,6 +1,6 @@
 # Marionetta
 
-Marionetta is a ruby library for executing commands to one
+Marionetta is a ruby library for executing commands on one
 or more remote machines via SSH.
 
 It provides puppet provisioning without the need for a puppet

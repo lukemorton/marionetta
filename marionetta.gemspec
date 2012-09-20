@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Luke Morton"]
   s.email       = ["lukemorton.dev@gmail.com"]
   s.summary     = "Provision using puppet and deploy your servers over SSH."
-  s.description = "Marionetta is a ruby library for executing commands to one
+  s.description = "Marionetta is a ruby library for executing commands on one
                    or more remote machines via SSH. It provides puppet
                    provisioning without the need for a puppet master and can
                    also deploy your application code (with rollbacks) via
