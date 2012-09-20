@@ -1,16 +1,43 @@
+# `Deployer` is a class for rsyncing your application to a
+# remote machine.
+# 
+# Using a directory structure similar to capistrano `Deployer`
+# maintains a folder of releases so you may rollback quickly.
+# 
 require 'marionetta/command_runner'
 
 module Marionetta
   module Manipulators
     class Deployer
+
+      ### RakeHelper tasks
+
+      # `Deployer` provides two rake tasks when used with
+      # `RakeHelper` namely `:deploy` and `:rollback`. When
+      # applied through `RakeHelper` they will appear
+      # namespaced under `:deployer` and your group name. With
+      # a group name of `:staging` would appear as:
+      # 
+      #     deployer:staging:deploy
+      #     deployer:staging:rollback
+      # 
       def self.tasks()
         [:deploy, :rollback]
       end
 
+      ### Server map requirements
+
+      # The keys `[:deployer][:from]` and `[:deployer][:to]`
+      # must be set in your `server` hash in order for
+      # `Deployer` to work.
+      # 
       def initialize(server)
         @server = server
       end
 
+      # Call `.can?()` to check if the correct keys have be
+      # passed in as the server.
+      # 
       def can?()
         d = server[:deployer]
         
@@ -21,6 +48,26 @@ module Marionetta
         end
       end
 
+      ### Deploying
+
+      # Call `.deploy()` to run a deploy to your remote
+      # server. The process involves:
+      # 
+      #  - `:from` directory copied to temporary directory
+      #  - `:exclude` files are removed
+      #  - rsync'd to a releases directory
+      #  - `:before_script` run
+      #  - release directory symlinked to a current directory
+      #  - `:after_script` run
+      # 
+      # The directory structure under `server[:deployer][:to]`
+      # looks something like this:
+      # 
+      #   current/ -> ./releases/2012-09-20_14:04:39
+      #   releases/
+      #     2012-09-20_13:59:15
+      #     2012-09-20_14:04:39
+      # 
       def deploy()
         release = timestamp
         create_tmp_release_dir(release)
@@ -35,6 +82,10 @@ module Marionetta
         run_script(:after, release)
       end
 
+      # To get an array of all releases call `.releases()`.
+      # Any release that is subsequently rolled back will not
+      # be listed.
+      # 
       def releases()
         releases = []
 
@@ -47,6 +98,10 @@ module Marionetta
         return releases
       end
 
+
+      # If you push out and need to rollback to the previous
+      # version you can use `.rollback()` to do just that.
+      # Currently you can only rollback once at a time.
       def rollback()
         rollback_to_release = releases[-2]
 
@@ -59,6 +114,12 @@ module Marionetta
           symlink_release_dir(rollback_to_release)
         end
       end
+      
+      ### Dependency Injection
+
+      # To use your own alternative to `CommandRunner` you can
+      # set an object of your choice via the `.cmd=` method.
+      attr_writer :cmd
 
     private
       
@@ -117,7 +178,6 @@ module Marionetta
           cmd.system("rm -rf #{exclude_files.flatten.join(' ')}")
         end
       end
-      attr_writer :cmd
 
       def symlink_release_dir(release)
         release_dir = release_dir(release)
