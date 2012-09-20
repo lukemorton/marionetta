@@ -26,6 +26,8 @@
 module Marionetta
   VERSION = '0.3.3'
 
+  ### Defining Servers
+
   # In order to connect to servers you must define configs for
   # each. This method provides a default map describing some
   # common settings including command binaries, default flags
