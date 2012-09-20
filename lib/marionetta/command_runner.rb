@@ -1,14 +1,40 @@
+# `CommandRunner` is the beast behind Marionetta. It has a
+# number of methods for executing commands both locally and
+# remotely.
+# 
+# The external requirement for this file is `open4` so that
+# we can easily capture output of commands executed.
+# 
 require 'open4'
 
 module Marionetta
   class CommandRunner
-    attr_reader :server
-    attr_reader :last
 
+    ### Server hash requirements
+
+    # The most important requirement is `:logger`. All methods
+    # depend upon this property being set since `.system()`
+    # (the local command execution method) logs commands,
+    # outputs and fatal exceptions using it. It should
+    # implement the ruby stdlib `Logger` interface.
+    # 
+    # Other requirements will be listed with their appropriate
+    # methods.
+    # 
     def initialize(server)
       @server = server
     end
     
+    ### Local execution
+
+    # Local commands are executed with `.system()`. You can
+    # optionally pass in a block which receives `stdout` and
+    # `stderr` as arguments:
+    # 
+    #     cmd.system('ls ~') do |out, err|
+    #       puts out
+    #     end
+    # 
     def system(*args)
       @last = args.join(' ')
       server[:logger].info(last)
@@ -31,26 +57,32 @@ module Marionetta
       return status.exitstatus == 0
     end
 
-    def rsync(from, to)
-      rsync_cmd = [server[:rsync][:command]]
+    # The last command run by `.system()` is accessible via
+    # the `.last` attribute.
+    # 
+    attr_reader :last
 
-      if server[:rsync].has_key?(:flags)
-        rsync_cmd << server[:rsync][:flags]
-      end
-      
-      rsync_cmd << [from, to]
+    ### Remote execution
 
-      system(*rsync_cmd.flatten)
-    end
-
-    def get(file_path, save_to = File.dirname(file_path))
-      rsync("#{server[:hostname]}:#{file_path}", save_to)
-    end
-
-    def put(file_path, save_to = File.dirname(file_path))
-      rsync(file_path, "#{server[:hostname]}:#{save_to}")
-    end
-
+    # Requirements for remote executions `server[:hostname]`
+    # must be set along with `server[:ssh][:command]`.
+    # Optionally `server[:ssh][:flags]` can be used to pass in
+    # flags such as `-i` for setting SSH keys.
+    # 
+    # A block can be called against this method just like
+    # `.system()` in order to get `stdout` and `stderr`.
+    # 
+    # An example:
+    # 
+    #     server = Marionetta.default_server
+    #     server[:hostname] = 'example.com'
+    #     server[:ssh][:flags] << ['-i', 'keys/private.key']
+    #     
+    #     cmd = Marionetta::CommandRunner.new(server)
+    #     cmd.ssh('ls -l') do |out, err|
+    #       puts out
+    #     end
+    # 
     def ssh(command, &block)
       ssh_cmd = [server[:ssh][:command]]
 
@@ -99,5 +131,29 @@ module Marionetta
 
       ssh(cmds.join(' && '))
     end
+
+    def rsync(from, to)
+      rsync_cmd = [server[:rsync][:command]]
+
+      if server[:rsync].has_key?(:flags)
+        rsync_cmd << server[:rsync][:flags]
+      end
+      
+      rsync_cmd << [from, to]
+
+      system(*rsync_cmd.flatten)
+    end
+
+    def get(file_path, save_to = File.dirname(file_path))
+      rsync("#{server[:hostname]}:#{file_path}", save_to)
+    end
+
+    def put(file_path, save_to = File.dirname(file_path))
+      rsync(file_path, "#{server[:hostname]}:#{save_to}")
+    end
+
+  private
+
+    attr_reader :server
   end
 end
