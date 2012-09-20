@@ -26,7 +26,7 @@ module Marionetta
         [:deploy, :rollback]
       end
 
-      ### Server map requirements
+      ### Server hash requirements
 
       # The keys `[:deployer][:from]` and `[:deployer][:to]`
       # must be set in your `server` hash in order for
