@@ -25,7 +25,7 @@
 # [github]: https://github.com/DrPheltRight/marionetta
 module Marionetta
 
-  VERSION = '0.3.6'
+  VERSION = '0.4.0'
 
   ### Defining Servers
 
