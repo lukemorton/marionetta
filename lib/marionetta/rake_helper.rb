@@ -3,16 +3,12 @@ require 'marionetta/manipulators'
 require 'rake'
 
 module Marionetta
-  class RakeHelper
+  module RakeHelper
+    extend self
+
     include ::Rake::DSL if defined?(::Rake::DSL)
 
-    attr_reader :group
-
-    def initialize(group)
-      @group = group
-    end
-
-    def install_group_tasks()
+    def install_group_tasks(group)
       install_group_tasks_for(group)
 
       group.groups.each do |g|

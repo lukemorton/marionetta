@@ -7,7 +7,7 @@ describe Marionetta::RakeHelper do
     vagrant = Marionetta::Group.new(:vagrant)
     vagrant.add_server(server)
 
-    Marionetta::RakeHelper.new(vagrant).install_group_tasks
+    Marionetta::RakeHelper.install_group_tasks(vagrant)
     Rake::Task.tasks.count.should > 0
 
     Rake::Task['puppet:vagrant:update'].invoke

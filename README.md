@@ -141,7 +141,7 @@ staging.add_server do |s|
   s[:deployer][:to] = '/home/staging/www'
 end
 
-Marionetta::RakeHelper.new(staging).install_group_tasks
+Marionetta::RakeHelper.install_group_tasks(staging)
 ```
 
 The tasks `puppet:staging:install`, `puppet:staging:update`,
