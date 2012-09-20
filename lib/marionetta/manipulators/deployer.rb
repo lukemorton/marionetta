@@ -6,8 +6,6 @@ module Marionetta
       def self.tasks()
         [:deploy, :rollback]
       end
-      
-      attr_writer :cmd
 
       def initialize(server)
         @server = server
@@ -119,6 +117,7 @@ module Marionetta
           cmd.system("rm -rf #{exclude_files.flatten.join(' ')}")
         end
       end
+      attr_writer :cmd
 
       def symlink_release_dir(release)
         release_dir = release_dir(release)
