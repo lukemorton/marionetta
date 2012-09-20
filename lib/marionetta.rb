@@ -13,7 +13,7 @@
 # 
 # Or – better yet – in your Gemfile:
 # 
-#   source "http://rubygems.org"
+#   source 'http://rubygems.org'
 #   gem 'marionetta'
 # 
 # Marionetta is written by [Luke Morton][author] and licensed

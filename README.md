@@ -18,7 +18,7 @@ gem install marionetta
 Or – better yet – in your Gemfile:
 
 ``` ruby
-source "http://rubygems.org"
+source 'http://rubygems.org'
 gem 'marionetta'
 ```
 
