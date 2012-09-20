@@ -65,6 +65,8 @@ module Marionetta
         :flags => ['-xv'],
       },
 
+      :puppet => {},
+
       :deployer => {},
 
       :debloyer => {
