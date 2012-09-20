@@ -9,12 +9,12 @@
 # Installing the gem is the best way to start using
 # Marionetta. You can do this from command line:
 # 
-#   gem install marionetta
+#     gem install marionetta
 # 
 # Or – better yet – in your Gemfile:
 # 
-#   source 'http://rubygems.org'
-#   gem 'marionetta'
+#     source 'http://rubygems.org'
+#     gem 'marionetta'
 # 
 # Marionetta is written by [Luke Morton][author] and licensed
 # under the MIT license. The project is [hosted on github][github]
