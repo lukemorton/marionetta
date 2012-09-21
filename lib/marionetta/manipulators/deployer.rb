@@ -172,7 +172,12 @@ module Marionetta
 
       def create_tmp_release_dir(release)
         tmp_release_dir = tmp_release_dir(release)
-        cmd.system("mkdir -p #{tmp_release_dir} && cp -rf #{from_dir} #{tmp_release_dir}")
+
+        create_tmp_dir_cmds = [
+          "mkdir -p #{File.dirname(tmp_release_dir)}",
+          "cp -rf #{from_dir} #{tmp_release_dir}",
+        ]
+        cmd.system(create_tmp_dir_cmds.join(' && '))
 
         if server[:deployer].has_key?(:exclude)
           exclude_files = server[:deployer][:exclude]
