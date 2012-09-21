@@ -177,7 +177,9 @@ module Marionetta
         if server[:deployer].has_key?(:exclude)
           exclude_files = server[:deployer][:exclude]
           exclude_files.map! {|f| Dir["#{tmp_release_dir}/#{f}"]}
-          cmd.system("rm -rf #{exclude_files.flatten.join(' ')}")
+          exclude_files.flatten!
+
+          cmd.system("rm -rf #{exclude_files.join(' ')}") unless exclude_files.empty?
         end
       end
 
