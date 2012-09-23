@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Marionetta by DrPheltRight</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Marionetta</h1>
+        <p>A ruby library for executing commands on one or more remote machines via SSH</p>
+
+        <p class="view"><a href="https://github.com/DrPheltRight/marionetta">View the Project on GitHub <small>DrPheltRight/marionetta</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/DrPheltRight/marionetta/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/DrPheltRight/marionetta/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/DrPheltRight/marionetta">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Marionetta</h1>
+
+<p>Marionetta is a ruby library for executing commands on one
+or more remote machines via SSH.</p>
+
+<p>It provides puppet provisioning without the need for a puppet
+master and can also deploy your application code (with
+rollbacks) via rsync. With a RakeHelper you can integrate it
+into your workflow with ease.</p>
+
+<p>Installing the gem is the best way to start using Marionetta.
+You can do this from command line:</p>
+
+<pre><code>gem install marionetta
+</code></pre>
+
+<p>Or – better yet – in your Gemfile:</p>
+
+<div class="highlight"><pre><span class="n">source</span> <span class="s1">'http://rubygems.org'</span>
+<span class="n">gem</span> <span class="s1">'marionetta'</span>
+</pre></div>
+
+<h2>Using Marionetta in your Rakefile</h2>
+
+<p>Marionetta provides an easy mechanism to generate rake tasks
+for each of your groups.</p>
+
+<p>In your Rakefile you can do something like so:</p>
+
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">'marionetta/group'</span>
+<span class="nb">require</span> <span class="s1">'marionetta/rake_helper'</span>
+
+<span class="n">staging</span> <span class="o">=</span> <span class="no">Marionetta</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:staging</span><span class="p">)</span>
+
+<span class="n">staging</span><span class="o">.</span><span class="n">add_server</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'staging.example.com'</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:ssh</span><span class="o">][</span><span class="ss">:flags</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'keys/private.key'</span><span class="o">]</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:puppet</span><span class="o">][</span><span class="ss">:manifest</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'puppet/manifest.pp'</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:deployer</span><span class="o">][</span><span class="ss">:from</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'/my-app'</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:deployer</span><span class="o">][</span><span class="ss">:to</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'/home/staging/www'</span>
+<span class="k">end</span>
+
+<span class="no">Marionetta</span><span class="o">::</span><span class="no">RakeHelper</span><span class="o">.</span><span class="n">install_group_tasks</span><span class="p">(</span><span class="n">staging</span><span class="p">)</span>
+</pre></div>
+
+<p>The tasks <code>puppet:staging:install</code>, <code>puppet:staging:update</code>,
+<code>deployer:staging:deploy</code> and <code>deployer:staging:rollback</code>
+will now be available in your Rakefile.</p>
+
+<h2>Defining a group of servers</h2>
+
+<p>Marionetta allows you to describe and manipulate a number of
+servers in parallel via SSH. First you need to define a group
+of servers:</p>
+
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">'marionetta/group'</span>
+
+<span class="n">servers</span> <span class="o">=</span> <span class="no">Marionetta</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:production</span><span class="p">)</span>
+
+<span class="n">servers</span><span class="o">.</span><span class="n">add_server</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'ubuntu@example.com'</span>
+<span class="k">end</span>
+
+<span class="n">servers</span><span class="o">.</span><span class="n">add_server</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'another@host.com'</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:ssh</span><span class="o">][</span><span class="ss">:flags</span><span class="o">]</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="s1">'-i'</span><span class="p">,</span> <span class="s1">'keys/private.key'</span><span class="o">]</span>
+<span class="k">end</span>
+</pre></div>
+
+<h2>Looping over a group</h2>
+
+<p>Continuing on from our example of defining a group of servers
+above, we will now iterate over the servers:</p>
+
+<div class="highlight"><pre><span class="c1"># Each block executes in it's own asynchronous thread</span>
+<span class="n">servers</span><span class="o">.</span><span class="n">each_server</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+  <span class="n">cmd</span> <span class="o">=</span> <span class="no">Marionetta</span><span class="o">::</span><span class="no">CommandRunner</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+  <span class="c1"># Send a command via SSH</span>
+  <span class="n">cmd</span><span class="o">.</span><span class="n">ssh</span><span class="p">(</span><span class="s1">'whoami'</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="o">|</span>
+    <span class="nb">puts</span> <span class="n">out</span><span class="o">.</span><span class="n">read</span>
+  <span class="k">end</span>
+
+  <span class="c1"># Get a file</span>
+  <span class="n">cmd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'/var/backups/database'</span><span class="p">)</span>
+
+  <span class="c1"># Put a file</span>
+  <span class="n">cmd</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s1">'/etc/motd'</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+
+<h2>Playing puppet master</h2>
+
+<p>Instead of running a puppet master server you can use
+Marionetta to orchestrate a number instances.</p>
+
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">'marionetta/group'</span>
+
+<span class="n">servers</span> <span class="o">=</span> <span class="no">Marionetta</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:production</span><span class="p">)</span>
+
+<span class="n">servers</span><span class="o">.</span><span class="n">add_server</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'ubuntu@example.com'</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:puppet</span><span class="o">][</span><span class="ss">:manifest</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'puppet/manifest.pp'</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:puppet</span><span class="o">][</span><span class="ss">:modules</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'puppet/modules'</span>
+<span class="k">end</span>
+
+<span class="c1"># Install and update puppet on each server according to</span>
+<span class="c1"># each servers puppet settings</span>
+<span class="n">servers</span><span class="o">.</span><span class="n">manipulate_each_server</span><span class="p">(</span><span class="ss">:puppet</span><span class="p">,</span> <span class="ss">:update</span><span class="p">)</span>
+</pre></div>
+
+<h2>Using the deployer</h2>
+
+<p>Also included is a deployment mechanism similar to capistrano.
+You can use this to deploy releases of folders from a local
+machine to a remote one over SSH.</p>
+
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">'marionetta/group'</span>
+
+<span class="n">staging</span> <span class="o">=</span> <span class="no">Marionetta</span><span class="o">::</span><span class="no">Group</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:staging</span><span class="p">)</span>
+
+<span class="n">staging</span><span class="o">.</span><span class="n">add_server</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'staging.example.com'</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:deployer</span><span class="o">][</span><span class="ss">:from</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'/my-app'</span>
+  <span class="n">s</span><span class="o">[</span><span class="ss">:deployer</span><span class="o">][</span><span class="ss">:to</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'/home/staging/www'</span>
+<span class="k">end</span>
+
+<span class="n">staging</span><span class="o">.</span><span class="n">manipulate_each_server</span><span class="p">(</span><span class="ss">:deployer</span><span class="p">,</span> <span class="ss">:deploy</span><span class="p">)</span>
+</pre></div>
+
+<p>The deployer also supports listing releases:</p>
+
+<div class="highlight"><pre><span class="n">staging</span><span class="o">.</span><span class="n">manipulate_each_server</span><span class="p">(</span><span class="ss">:deployer</span><span class="p">,</span> <span class="ss">:releases</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="p">,</span> <span class="n">releases</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">server</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span><span class="p">,</span> <span class="n">releases</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>Oh and you can rollback to the last release too!</p>
+
+<div class="highlight"><pre><span class="n">staging</span><span class="o">.</span><span class="n">manipulate_each_server</span><span class="p">(</span><span class="ss">:deployer</span><span class="p">,</span> <span class="ss">:rollback</span><span class="p">)</span>
+</pre></div>
+
+<h2>Author</h2>
+
+<p>Luke Morton a.k.a. DrPheltRight</p>
+
+<h2>License</h2>
+
+<p>MIT</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/DrPheltRight">DrPheltRight</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
