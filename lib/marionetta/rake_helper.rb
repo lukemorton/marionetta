@@ -1,3 +1,9 @@
+# `RakeHelper` is provided for those of you who wish to use
+# Marionetta in your `Rakefile`.
+# 
+# One method is provided to expose tasks of a specified group,
+# `.install_group_tasks(group)`.
+# 
 require 'marionetta'
 require 'marionetta/manipulators'
 require 'rake'
