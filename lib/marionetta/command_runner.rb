@@ -63,6 +63,9 @@ module Marionetta
       return status.exitstatus == 0
     end
 
+    # Create an archive of a local directory, optionally
+    # saving it to a directory or file path.
+    # 
     def archive(directory, save_to = nil)
       if save_to.nil?
         save_to = "#{directory}.#{server[:archive][:ext]}"
