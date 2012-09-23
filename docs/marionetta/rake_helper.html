@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>rake_helper.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+          <a class="source" href="../marionetta.html">marionetta.rb</a>
+          <a class="source" href="command_runner.html">command_runner.rb</a>
+          <a class="source" href="group.html">group.rb</a>
+          <a class="source" href="manipulators.html">manipulators.rb</a>
+          <a class="source" href="manipulators/debloyer.html">debloyer.rb</a>
+          <a class="source" href="manipulators/deployer.html">deployer.rb</a>
+          <a class="source" href="manipulators/puppet_manipulator.html">puppet_manipulator.rb</a>
+          <a class="source" href="rake_helper.html">rake_helper.rb</a>
+      </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>rake_helper.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        <p><code>RakeHelper</code> is provided for those of you who wish to use
+Marionetta in your <code>Rakefile</code>.</p>
+
+<p>One method is provided to expose tasks of a specified group,
+<code>.install_group_tasks(group)</code>.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;marionetta&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;marionetta/manipulators&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;rake&#39;</span>
+
+<span class="k">module</span> <span class="nn">Marionetta</span>
+  <span class="k">module</span> <span class="nn">RakeHelper</span>
+    <span class="kp">include</span> <span class="o">::</span><span class="no">Rake</span><span class="o">::</span><span class="no">DSL</span> <span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="o">::</span><span class="no">Rake</span><span class="o">::</span><span class="no">DSL</span><span class="p">)</span>
+    
+    <span class="kp">extend</span> <span class="nb">self</span>
+
+    <span class="k">def</span> <span class="nf">install_group_tasks</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+      <span class="n">install_group_tasks_for</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+      <span class="n">group</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">g</span><span class="o">|</span>
+        <span class="n">install_group_tasks_for</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">install_group_tasks_for</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+      <span class="no">Manipulators</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">manipulator_name</span><span class="p">,</span> <span class="n">manipulator_class</span><span class="o">|</span>
+        <span class="n">manipulator_class</span><span class="o">.</span><span class="n">tasks</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">method_name</span><span class="o">|</span>
+          <span class="n">desc</span><span class="p">(</span><span class="n">task_desc</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">manipulator_name</span><span class="p">,</span> <span class="n">method_name</span><span class="p">))</span>
+          <span class="n">task</span><span class="p">(</span><span class="n">task_name</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">manipulator_name</span><span class="p">,</span> <span class="n">method_name</span><span class="p">))</span> <span class="k">do</span>
+            <span class="n">group</span><span class="o">.</span><span class="n">manipulate_each_server</span><span class="p">(</span><span class="n">manipulator_name</span><span class="p">,</span> <span class="n">method_name</span><span class="p">)</span>
+          <span class="k">end</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">task_name</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">manipulator_name</span><span class="p">,</span> <span class="n">method_name</span><span class="p">)</span>
+      <span class="k">unless</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">raise</span> <span class="s1">&#39;Group must be named&#39;</span>
+      <span class="k">end</span>
+
+      <span class="k">return</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">manipulator_name</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">method_name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">task_desc</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">manipulator_name</span><span class="p">,</span> <span class="n">method_name</span><span class="p">)</span>
+      <span class="s2">&quot;</span><span class="si">#{</span><span class="n">method_name</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">manipulator_name</span><span class="si">}</span><span class="s2"> on </span><span class="si">#{</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (marionetta)&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

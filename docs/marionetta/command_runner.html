@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>command_runner.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+          <a class="source" href="../marionetta.html">marionetta.rb</a>
+          <a class="source" href="command_runner.html">command_runner.rb</a>
+          <a class="source" href="group.html">group.rb</a>
+          <a class="source" href="manipulators.html">manipulators.rb</a>
+          <a class="source" href="manipulators/debloyer.html">debloyer.rb</a>
+          <a class="source" href="manipulators/deployer.html">deployer.rb</a>
+          <a class="source" href="manipulators/puppet_manipulator.html">puppet_manipulator.rb</a>
+          <a class="source" href="rake_helper.html">rake_helper.rb</a>
+      </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>command_runner.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        <p><code>CommandRunner</code> is the beast behind Marionetta. It has a
+number of methods for executing commands both locally and
+remotely.</p>
+
+<p>The external requirement for this file is <code>open4</code> so that
+we can easily capture output of commands executed.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;open4&#39;</span>
+
+<span class="k">module</span> <span class="nn">Marionetta</span>
+  <span class="k">class</span> <span class="nc">CommandRunner</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Server_hash_requirements'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Server_hash_requirements">&#182;</a>
+        </div>
+        <h2>Server hash requirements</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>The most important requirement is <code>:logger</code>. All methods
+depend upon this property being set since <code>.system()</code>
+(the local command execution method) logs commands,
+outputs and fatal exceptions using it. It should
+implement the ruby stdlib <code>Logger</code> interface.</p>
+
+<p>Other requirements will be listed with their appropriate
+methods.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">server</span><span class="p">)</span>
+      <span class="vi">@server</span> <span class="o">=</span> <span class="n">server</span>
+    <span class="k">end</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-Local_execution'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Local_execution">&#182;</a>
+        </div>
+        <h2>Local execution</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>Local commands are executed with <code>.system()</code>. We use
+<code>Open4::popen4</code> to capture the output of the command run
+neatly.</p>
+
+<p>The command run is logged as info, output as debug and
+any exceptions thrown are sent as fatal.</p>
+
+<p>You can optionally pass in a block which receives
+<code>stdout</code> and <code>stderr</code> as arguments:</p>
+
+<pre><code>cmd.system(&lsquo;ls ~&rsquo;) do |out, err|
+  puts out
+end
+</code></pre>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">system</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+      <span class="vi">@last</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+      <span class="n">server</span><span class="o">[</span><span class="ss">:logger</span><span class="o">].</span><span class="n">info</span><span class="p">(</span><span class="n">last</span><span class="p">)</span>
+
+      <span class="k">begin</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="no">Open4</span><span class="o">::</span><span class="n">popen4</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">pid</span><span class="p">,</span> <span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="o">|</span>
+          <span class="k">yield</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="k">if</span> <span class="nb">block_given?</span>
+
+          <span class="o">[</span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">io</span><span class="o">|</span>
+            <span class="n">str</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read</span>
+            <span class="n">server</span><span class="o">[</span><span class="ss">:logger</span><span class="o">].</span><span class="n">debug</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="k">unless</span> <span class="n">str</span><span class="o">.</span><span class="n">empty?</span>
+          <span class="k">end</span>
+        <span class="k">end</span>
+      <span class="k">rescue</span>
+        <span class="n">server</span><span class="o">[</span><span class="ss">:logger</span><span class="o">].</span><span class="n">fatal</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
+        <span class="n">server</span><span class="o">[</span><span class="ss">:logger</span><span class="o">].</span><span class="n">fatal</span><span class="p">(</span><span class="vg">$!</span><span class="p">)</span>
+        <span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="k">end</span>
+
+      <span class="k">return</span> <span class="n">status</span><span class="o">.</span><span class="n">exitstatus</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>Create an archive of a local directory, optionally
+saving it to a directory or file path.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">archive</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">save_to</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">save_to</span><span class="o">.</span><span class="n">nil?</span>
+        <span class="n">save_to</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">directory</span><span class="si">}</span><span class="s2">.</span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:archive</span><span class="o">][</span><span class="ss">:ext</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+      <span class="k">elsif</span> <span class="no">File</span><span class="o">.</span><span class="n">directory?</span><span class="p">(</span><span class="n">save_to</span><span class="p">)</span>
+        <span class="n">dirname</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+        <span class="n">save_to</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">save_to</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">dirname</span><span class="si">}</span><span class="s2">.</span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:archive</span><span class="o">][</span><span class="ss">:ext</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+      <span class="k">end</span>
+
+      <span class="n">archive_cmd</span> <span class="o">=</span> <span class="o">[</span>
+        <span class="n">server</span><span class="o">[</span><span class="ss">:archive</span><span class="o">][</span><span class="ss">:command</span><span class="o">]</span><span class="p">,</span>
+        <span class="n">server</span><span class="o">[</span><span class="ss">:archive</span><span class="o">][</span><span class="ss">:flags</span><span class="o">]</span><span class="p">,</span>
+        <span class="o">[</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="n">save_to</span><span class="o">]</span><span class="p">,</span>
+        <span class="o">[</span><span class="s1">&#39;-C&#39;</span><span class="p">,</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">]</span><span class="p">,</span>
+        <span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span>
+      <span class="o">]</span>
+
+      <span class="nb">system</span><span class="p">(</span><span class="o">*</span><span class="n">archive_cmd</span><span class="o">.</span><span class="n">flatten</span><span class="p">)</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
+        </div>
+        <p>The last command run by <code>.system()</code> is accessible via
+the <code>.last</code> attribute.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kp">attr_reader</span> <span class="ss">:last</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Remote_execution'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Remote_execution">&#182;</a>
+        </div>
+        <h2>Remote execution</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-9'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-9">&#182;</a>
+        </div>
+        <p>Requirements for remote executions <code>server[:hostname]</code>
+must be set along with <code>server[:ssh][:command]</code>.
+Optionally <code>server[:ssh][:flags]</code> can be used to pass in
+flags such as <code>-i</code> for setting SSH keys.</p>
+
+<p>A block can be called against this method just like
+<code>.system()</code> in order to get <code>stdout</code> and <code>stderr</code>.</p>
+
+<p>Example:</p>
+
+<pre><code>server = Marionetta.default_server
+server[:hostname] = &lsquo;example.com&rsquo;
+server[:ssh][:flags] &lt;&lt; [&lsquo;-i&rsquo;, &lsquo;keys/private.key&rsquo;]
+
+cmd = Marionetta::CommandRunner.new(server)
+cmd.ssh(&lsquo;ls -l&rsquo;) do |out, err|
+  puts out
+end
+</code></pre>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">ssh</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+      <span class="n">ssh_cmd</span> <span class="o">=</span> <span class="o">[</span><span class="n">server</span><span class="o">[</span><span class="ss">:ssh</span><span class="o">][</span><span class="ss">:command</span><span class="o">]]</span>
+
+      <span class="k">if</span> <span class="n">server</span><span class="o">[</span><span class="ss">:ssh</span><span class="o">].</span><span class="n">has_key?</span><span class="p">(</span><span class="ss">:flags</span><span class="p">)</span>
+        <span class="n">ssh_cmd</span> <span class="o">&lt;&lt;</span> <span class="n">server</span><span class="o">[</span><span class="ss">:ssh</span><span class="o">][</span><span class="ss">:flags</span><span class="o">]</span>
+      <span class="k">end</span>
+
+      <span class="n">ssh_cmd</span> <span class="o">&lt;&lt;</span> <span class="n">server</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span>
+      <span class="n">ssh_cmd</span> <span class="o">&lt;&lt;</span> <span class="n">command</span>
+
+      <span class="nb">system</span><span class="p">(</span><span class="o">*</span><span class="n">ssh_cmd</span><span class="o">.</span><span class="n">flatten</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-10'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-10">&#182;</a>
+        </div>
+        <p>Extract an archive, optionally to a specified directory
+on a remote machine.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">ssh_extract</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="n">save_to</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">archive_path</span><span class="p">))</span>
+      <span class="n">cmds</span> <span class="o">=</span> <span class="o">[</span>
+        <span class="s2">&quot;mkdir -p </span><span class="si">#{</span><span class="n">save_to</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cd </span><span class="si">#{</span><span class="n">save_to</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+      <span class="o">]</span>
+
+      <span class="n">extract_cmd</span> <span class="o">=</span> <span class="o">[</span>
+        <span class="n">server</span><span class="o">[</span><span class="ss">:extract</span><span class="o">][</span><span class="ss">:command</span><span class="o">]</span><span class="p">,</span>
+        <span class="n">server</span><span class="o">[</span><span class="ss">:extract</span><span class="o">][</span><span class="ss">:flags</span><span class="o">]</span><span class="p">,</span>
+        <span class="o">[</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="n">archive_path</span><span class="o">]</span><span class="p">,</span>
+      <span class="o">]</span>
+
+      <span class="n">cmds</span> <span class="o">&lt;&lt;</span> <span class="n">extract_cmd</span><span class="o">.</span><span class="n">flatten</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+
+      <span class="n">ssh</span><span class="p">(</span><span class="n">cmds</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &amp;&amp; &#39;</span><span class="p">))</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-11'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-11">&#182;</a>
+        </div>
+        <p>Using the rsync command copy one file system location to
+another. These may be both local or remote, or a mixture
+of the two.</p>
+
+<p>Example:</p>
+
+<pre><code>rsync(&lsquo;/var/www/logs&rsquo;, &lsquo;/var/backups/www/logs&rsquo;)
+rsync(&lsquo;/var/www/logs&rsquo;, &lsquo;ubuntu@example.com:/var/backups/www/logs&rsquo;)
+</code></pre>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">rsync</span><span class="p">(</span><span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="p">)</span>
+      <span class="n">rsync_cmd</span> <span class="o">=</span> <span class="o">[</span><span class="n">server</span><span class="o">[</span><span class="ss">:rsync</span><span class="o">][</span><span class="ss">:command</span><span class="o">]]</span>
+
+      <span class="k">if</span> <span class="n">server</span><span class="o">[</span><span class="ss">:rsync</span><span class="o">].</span><span class="n">has_key?</span><span class="p">(</span><span class="ss">:flags</span><span class="p">)</span>
+        <span class="n">rsync_cmd</span> <span class="o">&lt;&lt;</span> <span class="n">server</span><span class="o">[</span><span class="ss">:rsync</span><span class="o">][</span><span class="ss">:flags</span><span class="o">]</span>
+      <span class="k">end</span>
+      
+      <span class="n">rsync_cmd</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="o">]</span>
+
+      <span class="nb">system</span><span class="p">(</span><span class="o">*</span><span class="n">rsync_cmd</span><span class="o">.</span><span class="n">flatten</span><span class="p">)</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-12'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-12">&#182;</a>
+        </div>
+        <p>Short hand for grabbing a file from <code>:hostname</code> saving
+to the same location on the local machine unless a path
+is specified. </p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">save_to</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+      <span class="n">rsync</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">save_to</span><span class="p">)</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-13'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-13">&#182;</a>
+        </div>
+        <p>Short hand for putting a file to <code>:hostname</code> from the
+local machine to the same location on the remote
+machine unless a path is specified.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">save_to</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+      <span class="n">rsync</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">save_to</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+    <span class="kp">attr_reader</span> <span class="ss">:server</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

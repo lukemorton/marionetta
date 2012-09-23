@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>puppet_manipulator.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+          <a class="source" href="../../marionetta.html">marionetta.rb</a>
+          <a class="source" href="../command_runner.html">command_runner.rb</a>
+          <a class="source" href="../group.html">group.rb</a>
+          <a class="source" href="../manipulators.html">manipulators.rb</a>
+          <a class="source" href="debloyer.html">debloyer.rb</a>
+          <a class="source" href="deployer.html">deployer.rb</a>
+          <a class="source" href="puppet_manipulator.html">puppet_manipulator.rb</a>
+          <a class="source" href="../rake_helper.html">rake_helper.rb</a>
+      </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>puppet_manipulator.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        <p><code>PuppetManipulator</code> copies a puppet manifest and optionally
+modules to a remote machine and applies them.</p>
+
+<p>You could do this with a puppet master instance, and that
+could (and most likely is) the right option for you. However
+if you do not want to host an additional node as your puppet
+master or want to push changes from your machine directly to
+nodes them this class maybe what you&rsquo;re looking for.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">require</span> <span class="s1">&#39;marionetta/command_runner&#39;</span>
+
+<span class="k">module</span> <span class="nn">Marionetta</span>
+  <span class="k">module</span> <span class="nn">Manipulators</span>
+    <span class="k">class</span> <span class="nc">PuppetManipulator</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-RakeHelper_tasks'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-RakeHelper_tasks">&#182;</a>
+        </div>
+        <h2>RakeHelper tasks</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p><code>PupperManipulator</code> provides two rake tasks when used
+with <code>RakeHelper</code> namely <code>:install</code> and <code>:update</code>. 
+When applied through <code>RakeHelper</code> they will appear
+namespaced under <code>:puppet</code> and your group name.</p>
+
+<p>With a group name of <code>:staging</code> would appear as:</p>
+
+<pre><code>puppet:staging:install
+puppet:staging:update
+</code></pre>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">tasks</span><span class="p">()</span>
+        <span class="o">[</span><span class="ss">:install</span><span class="p">,</span> <span class="ss">:update</span><span class="o">]</span>
+      <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Server_hash_requirements'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Server_hash_requirements">&#182;</a>
+        </div>
+        <h2>Server hash requirements</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>The key <code>[:puppet][:manifest]</code> must be set in your
+<code>server</code> hash in order for <code>PuppetManipulator</code> to
+function correctly.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">server</span><span class="p">)</span>
+        <span class="vi">@server</span> <span class="o">=</span> <span class="n">server</span>
+      <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>Call <code>.can?()</code> to check if the <code>:manifest</code> key has
+been set in the <code>server[:puppet]</code>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">def</span> <span class="nf">can?</span><span class="p">()</span>
+        <span class="n">server</span><span class="o">[</span><span class="ss">:puppet</span><span class="o">].</span><span class="n">has_key?</span><span class="p">(</span><span class="ss">:manifest</span><span class="p">)</span>
+      <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Installing_puppet'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Installing_puppet">&#182;</a>
+        </div>
+        <h2>Installing puppet</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-8'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-8">&#182;</a>
+        </div>
+        <p><code>PuppetManipulator</code> provides the <code>.install()</code> method
+to install puppet on debian or ubuntu servers.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">def</span> <span class="nf">install</span><span class="p">()</span>
+        <span class="n">install_deb_repo</span>
+        <span class="n">install_deb</span>
+      <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Updating_puppet'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Updating_puppet">&#182;</a>
+        </div>
+        <h2>Updating puppet</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-10'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-10">&#182;</a>
+        </div>
+        <p>Use <code>.update()</code> to package up your manifest and
+optionally modules and send them to your remote
+machine. Once there they will be applied.</p>
+
+<p>If puppet is not installed, we attempt to install it
+before applying the manifest.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">def</span> <span class="nf">update</span><span class="p">()</span>
+        <span class="n">install</span> <span class="k">unless</span> <span class="n">installed?</span>
+        <span class="n">archive_files</span>
+        <span class="n">send_archive</span>
+        <span class="n">apply_archive</span>
+      <span class="k">end</span>
+      </pre></div>
+      </td>
+    </tr>
+    <tr id='section-Dependency_Injection'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Dependency_Injection">&#182;</a>
+        </div>
+        <h2>Dependency Injection</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-12'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-12">&#182;</a>
+        </div>
+        <p>To use your own alternative to <code>CommandRunner</code> you can
+set an object of your choice via the <code>.cmd=</code> method.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="kp">attr_writer</span> <span class="ss">:cmd</span>
+
+    <span class="kp">private</span>
+    
+      <span class="kp">attr_reader</span> <span class="ss">:server</span>
+
+      <span class="k">def</span> <span class="nf">cmd</span><span class="p">()</span>
+        <span class="vi">@cmd</span> <span class="o">||=</span> <span class="no">CommandRunner</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">server</span><span class="p">)</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="nf">installed?</span><span class="p">()</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">ssh</span><span class="p">(</span><span class="s1">&#39;which puppet&#39;</span><span class="p">)</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="nf">install_deb_repo</span><span class="p">()</span>
+        <span class="n">deb_file</span> <span class="o">=</span> <span class="s1">&#39;puppetlabs-release-stable.deb&#39;</span>
+      
+        <span class="n">repo_install_cmd</span> <span class="o">=</span> <span class="o">[</span>
+          <span class="s2">&quot;wget http://apt.puppetlabs.com/</span><span class="si">#{</span><span class="n">deb_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;sudo dpkg -i </span><span class="si">#{</span><span class="n">deb_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> 
+          <span class="s2">&quot;rm </span><span class="si">#{</span><span class="n">deb_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &amp;&amp; &#39;</span><span class="p">)</span>
+
+        <span class="n">repo_check_cmd</span> <span class="o">=</span> <span class="s2">&quot;test -f /etc/apt/sources.list.d/puppetlabs.list&quot;</span>
+
+        <span class="n">cmd</span><span class="o">.</span><span class="n">ssh</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">repo_check_cmd</span><span class="si">}</span><span class="s2"> || { </span><span class="si">#{</span><span class="n">repo_install_cmd</span><span class="si">}</span><span class="s2">; }&quot;</span><span class="p">)</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="nf">install_deb</span><span class="p">()</span>
+        <span class="n">install_cmd</span> <span class="o">=</span> <span class="o">[</span>
+          <span class="s1">&#39;sudo aptitude update&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;sudo aptitude install -y puppet&#39;</span>
+        <span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &amp;&amp; &#39;</span><span class="p">)</span>
+
+        <span class="n">cmd</span><span class="o">.</span><span class="n">ssh</span><span class="p">(</span><span class="s2">&quot;which puppet || { </span><span class="si">#{</span><span class="n">install_cmd</span><span class="si">}</span><span class="s2">; }&quot;</span><span class="p">)</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="nf">puppet_tmp</span><span class="p">()</span>
+        <span class="s2">&quot;/tmp/puppet_</span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="nf">archive_files</span><span class="p">()</span>
+        <span class="n">cmds</span> <span class="o">=</span> <span class="o">[</span>
+          <span class="s2">&quot;rm -rf </span><span class="si">#{</span><span class="n">puppet_tmp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;mkdir </span><span class="si">#{</span><span class="n">puppet_tmp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;cp </span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:puppet</span><span class="o">][</span><span class="ss">:manifest</span><span class="o">]</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">puppet_tmp</span><span class="si">}</span><span class="s2">/manifest.pp&quot;</span><span class="p">,</span>
+        <span class="o">]</span>
+
+        <span class="k">if</span> <span class="n">server</span><span class="o">[</span><span class="ss">:puppet</span><span class="o">].</span><span class="n">has_key?</span><span class="p">(</span><span class="ss">:modules</span><span class="p">)</span>
+          <span class="n">cmds</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;cp -r </span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:puppet</span><span class="o">][</span><span class="ss">:modules</span><span class="o">]</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">puppet_tmp</span><span class="si">}</span><span class="s2">/modules&quot;</span>
+        <span class="k">end</span>
+
+        <span class="n">cmd</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmds</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &amp;&amp; &#39;</span><span class="p">))</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">archive</span><span class="p">(</span><span class="n">puppet_tmp</span><span class="p">)</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="nf">send_archive</span><span class="p">()</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">puppet_tmp</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span><span class="p">)</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="nf">apply_archive</span><span class="p">()</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">ssh_extract</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">puppet_tmp</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span><span class="p">)</span>
+        <span class="n">cmds</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;cd </span><span class="si">#{</span><span class="n">puppet_tmp</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">]</span>
+
+        <span class="n">puppet_cmd</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;sudo puppet apply&#39;</span><span class="o">]</span>
+
+        <span class="k">if</span> <span class="n">server</span><span class="o">[</span><span class="ss">:puppet</span><span class="o">].</span><span class="n">has_key?</span><span class="p">(</span><span class="ss">:modules</span><span class="p">)</span>
+          <span class="n">puppet_cmd</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;--modulepath=/tmp/puppet/modules&#39;</span>
+        <span class="k">end</span>
+
+        <span class="n">puppet_cmd</span> <span class="o">&lt;&lt;</span> <span class="s1">&#39;manifest.pp&#39;</span>
+
+        <span class="k">if</span> <span class="n">server</span><span class="o">[</span><span class="ss">:puppet</span><span class="o">].</span><span class="n">has_key?</span><span class="p">(</span><span class="ss">:flags</span><span class="p">)</span>
+          <span class="n">puppet_cmd</span> <span class="o">&lt;&lt;</span> <span class="n">server</span><span class="o">[</span><span class="ss">:puppet</span><span class="o">][</span><span class="ss">:flags</span><span class="o">]</span>
+        <span class="k">end</span>
+
+        <span class="n">cmds</span> <span class="o">&lt;&lt;</span> <span class="n">puppet_cmd</span><span class="o">.</span><span class="n">flatten</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        
+        <span class="n">cmd</span><span class="o">.</span><span class="n">ssh</span><span class="p">(</span><span class="n">cmds</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &amp;&amp; &#39;</span><span class="p">))</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
