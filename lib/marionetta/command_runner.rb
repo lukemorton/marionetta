@@ -27,9 +27,15 @@ module Marionetta
     
     ### Local execution
 
-    # Local commands are executed with `.system()`. You can
-    # optionally pass in a block which receives `stdout` and
-    # `stderr` as arguments:
+    # Local commands are executed with `.system()`. We use
+    # `Open4::popen4` to capture the output of the command run
+    # neatly.
+    # 
+    # The command run is logged as info, output as debug and
+    # any exceptions thrown are sent as fatal.
+    # 
+    # You can optionally pass in a block which receives
+    # `stdout` and `stderr` as arguments:
     # 
     #     cmd.system('ls ~') do |out, err|
     #       puts out
