@@ -165,4 +165,4 @@ Luke Morton a.k.a. DrPheltRight
 
 ## License
 
-MIT
+Licensed under MIT by Luke Morton, 2012.
