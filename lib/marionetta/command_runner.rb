@@ -57,6 +57,25 @@ module Marionetta
       return status.exitstatus == 0
     end
 
+    def archive(directory, save_to = nil)
+      if save_to.nil?
+        save_to = "#{directory}.#{server[:archive][:ext]}"
+      elsif File.directory?(save_to)
+        dirname = File.basename(directory)
+        save_to = "#{save_to}/#{dirname}.#{server[:archive][:ext]}"
+      end
+
+      archive_cmd = [
+        server[:archive][:command],
+        server[:archive][:flags],
+        ['-f', save_to],
+        ['-C', File.dirname(directory)],
+        File.basename(directory),
+      ]
+
+      system(*archive_cmd.flatten)
+    end
+
     # The last command run by `.system()` is accessible via
     # the `.last` attribute.
     # 
@@ -94,25 +113,6 @@ module Marionetta
       ssh_cmd << command
 
       system(*ssh_cmd.flatten, &block)
-    end
-
-    def archive(directory, save_to = nil)
-      if save_to.nil?
-        save_to = "#{directory}.#{server[:archive][:ext]}"
-      elsif File.directory?(save_to)
-        dirname = File.basename(directory)
-        save_to = "#{save_to}/#{dirname}.#{server[:archive][:ext]}"
-      end
-
-      archive_cmd = [
-        server[:archive][:command],
-        server[:archive][:flags],
-        ['-f', save_to],
-        ['-C', File.dirname(directory)],
-        File.basename(directory),
-      ]
-
-      system(*archive_cmd.flatten)
     end
 
     def ssh_extract(archive_path, save_to = File.dirname(archive_path))
