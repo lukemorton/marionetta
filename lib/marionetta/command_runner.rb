@@ -100,7 +100,7 @@ module Marionetta
     # A block can be called against this method just like
     # `.system()` in order to get `stdout` and `stderr`.
     # 
-    # An example:
+    # Example:
     # 
     #     server = Marionetta.default_server
     #     server[:hostname] = 'example.com'
@@ -124,6 +124,9 @@ module Marionetta
       system(*ssh_cmd.flatten, &block)
     end
 
+    # Extract an archive, optionally to a specified directory
+    # on a remote machine.
+    # 
     def ssh_extract(archive_path, save_to = File.dirname(archive_path))
       cmds = [
         "mkdir -p #{save_to}",
@@ -141,6 +144,15 @@ module Marionetta
       ssh(cmds.join(' && '))
     end
 
+    # Using the rsync command copy one file system location to
+    # another. These may be both local or remote, or a mixture
+    # of the two.
+    # 
+    # Example:
+    # 
+    #     rsync('/var/www/logs', '/var/backups/www/logs')
+    #     rsync('/var/www/logs', 'ubuntu@example.com:/var/backups/www/logs')
+    # 
     def rsync(from, to)
       rsync_cmd = [server[:rsync][:command]]
 
@@ -153,10 +165,18 @@ module Marionetta
       system(*rsync_cmd.flatten)
     end
 
+    # Short hand for grabbing a file from `:hostname` saving
+    # to the same location on the local machine unless a path
+    # is specified. 
+    # 
     def get(file_path, save_to = File.dirname(file_path))
       rsync("#{server[:hostname]}:#{file_path}", save_to)
     end
 
+    # Short hand for putting a file to `:hostname` from the
+    # local machine to the same location on the remote
+    # machine unless a path is specified.
+    # 
     def put(file_path, save_to = File.dirname(file_path))
       rsync(file_path, "#{server[:hostname]}:#{save_to}")
     end
