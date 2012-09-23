@@ -163,6 +163,12 @@ staging.manipulate_each_server(:deployer, :rollback)
 
 Luke Morton a.k.a. DrPheltRight
 
+## Collaborating
+
+Create an issue and send a pull request if you get any bright
+ideas or have a fix. Feel free to create an issue and not send
+one too, feedback is always welcome.
+
 ## License
 
 Licensed under MIT by Luke Morton, 2012.
