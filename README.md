@@ -1,7 +1,9 @@
 # Marionetta
 
-Marionetta is a ruby library for executing commands on one
-or more remote machines via SSH.
+[Marionetta][marionetta] is a ruby library for executing
+commands on one or more remote machines via SSH.
+
+[marionetta]: http://drpheltright.github.com/marionetta/
 
 It provides puppet provisioning without the need for a puppet
 master and can also deploy your application code (with
@@ -21,6 +23,14 @@ Or – better yet – in your Gemfile:
 source 'http://rubygems.org'
 gem 'marionetta'
 ```
+
+## Documentation
+
+The majority of documentation can be found on the
+[source annotations][docs] which are written primarily at
+describing the usage of the library.
+
+[docs]: http://drpheltright.github.com/marionetta/docs/marionetta.html
 
 ## Using Marionetta in your Rakefile
 
