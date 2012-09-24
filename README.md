@@ -3,8 +3,6 @@
 [Marionetta][marionetta] is a ruby library for executing
 commands on one or more remote machines via SSH.
 
-[marionetta]: http://drpheltright.github.com/marionetta/
-
 It provides puppet provisioning without the need for a puppet
 master and can also deploy your application code (with
 rollbacks) via rsync. With a RakeHelper you can integrate it
@@ -23,6 +21,8 @@ Or – better yet – in your Gemfile:
 source 'http://rubygems.org'
 gem 'marionetta'
 ```
+
+[marionetta]: http://drpheltright.github.com/marionetta/
 
 ## Documentation
 
