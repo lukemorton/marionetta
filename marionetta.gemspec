@@ -3,10 +3,14 @@ require File.dirname(__FILE__)+'/lib/marionetta'
 Gem::Specification.new do |s|
   s.name        = "marionetta"
   s.version     = Marionetta::VERSION
+  
   s.homepage    = 'https://github.com/DrPheltRight/marionetta'
+
   s.authors     = ["Luke Morton"]
   s.email       = ["lukemorton.dev@gmail.com"]
+
   s.summary     = "Provision using puppet and deploy your servers over SSH."
+
   s.description = "Marionetta is a ruby library for executing commands on one
                    or more remote machines via SSH. It provides puppet
                    provisioning without the need for a puppet master and can
