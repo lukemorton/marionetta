@@ -32,7 +32,10 @@ the annotations informative on *how to use* this library. If
 you feel they could be improved please create an issue on
 GitHub.
 
+If you prefer looking at the code, check it out on [github][github].
+
 [docs]: http://drpheltright.github.com/marionetta/docs/marionetta.html
+[github]: http://github.com/DrPheltRight/marionetta/
 
 ## Using Marionetta in your Rakefile
 
