@@ -26,9 +26,11 @@ gem 'marionetta'
 
 ## Documentation
 
-The majority of documentation can be found on the
-[source annotations][docs] which are written primarily at
-describing the usage of the library.
+Marionetta has [annotated source][docs] that provides the
+bulk of documentation for Marionetta. Hopefully you'll find
+the annotations informative on *how to use* this library. If
+you feel they could be improved please create an issue on
+GitHub.
 
 [docs]: http://drpheltright.github.com/marionetta/docs/marionetta.html
 
