@@ -144,7 +144,7 @@ module Marionetta
         puppet_cmd = ['sudo puppet apply']
 
         if server[:puppet].has_key?(:modules)
-          puppet_cmd << '--modulepath=/tmp/puppet/modules'
+          puppet_cmd << "--modulepath=#{puppet_tmp}/modules"
         end
 
         puppet_cmd << 'manifest.pp'
