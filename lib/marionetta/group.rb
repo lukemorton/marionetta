@@ -122,7 +122,7 @@ module Marionetta
           yield s, return_val if block_given?
         else
           s[:logger].warn(
-            "Could not Manipulators[:#{:manipulator}].#{method_name}()")
+            "Could not Manipulators[:#{manipulator_name}].#{method_name}()")
         end
       end
     end
