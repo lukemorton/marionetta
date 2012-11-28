@@ -184,6 +184,27 @@ rake
 
 You need to ensure `spec/vagrant/key` has `0600` permissions.
 
+## Generating documentation
+
+Generate documentation using the following command:
+
+```
+rake doc
+```
+
+Publishing the documentation to GitHub pages is a little messy
+to say the least. Try this:
+
+```
+rake doc
+mv docs docs-new
+git checkout gh-pages
+rm -rf docs
+mv -f docs-new docs
+git add docs
+git commit -m "Update documentation."
+```
+
 ## License
 
 Licensed under MIT by Luke Morton, 2012.
