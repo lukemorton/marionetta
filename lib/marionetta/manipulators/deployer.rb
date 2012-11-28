@@ -86,7 +86,7 @@ module Marionetta
       def releases()
         releases = []
 
-        cmd.ssh("ls -m #{release_dir}") do |stdout|
+        cmd.ssh("ls -m #{releases_dir}") do |stdout|
           stdout.read.split(/[,\s]+/).each do |release|
             releases << release unless release.index('skip-') == 0
           end
@@ -135,10 +135,12 @@ module Marionetta
         server[:deployer][:to]
       end
 
-      def release_dir(release=nil)
-        dir = "#{to_dir}/releases"
-        dir << "/#{release}" unless release.nil?
-        return dir
+      def releases_dir()
+        "#{to_dir}/releases"
+      end
+      
+      def release_dir(release)
+        "#{releases_dir}/#{release}"
       end
 
       def current_dir()
