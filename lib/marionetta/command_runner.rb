@@ -153,11 +153,13 @@ module Marionetta
     #     rsync('/var/www/logs', '/var/backups/www/logs')
     #     rsync('/var/www/logs', 'ubuntu@example.com:/var/backups/www/logs')
     # 
-    def rsync(from, to)
+    def rsync(from, to, *additional_flags)
       rsync_cmd = [server[:rsync][:command]]
 
       if server[:rsync].has_key?(:flags)
-        rsync_cmd << server[:rsync][:flags]
+        flags = server[:rsync][:flags]
+        flags.concat(additional_flags) unless additional_flags.empty?
+        rsync_cmd << flags
       end
       
       rsync_cmd << [from, to]
