@@ -72,11 +72,8 @@ module Marionetta
       def deploy()
         release = timestamp
         create_tmp_release_dir(release)
-        cmd.ssh("mkdir -p #{release_dir}")
 
-        unless cmd.put(tmp_release_dir(release), release_dir)
-          fatal('Could not rsync release')
-        end
+        send_files(release)
 
         run_script(:before, release)
         symlink_release_dir(release)
@@ -185,6 +182,14 @@ module Marionetta
           exclude_files.flatten!
 
           cmd.system("rm -rf #{exclude_files.join(' ')}") unless exclude_files.empty?
+        end
+      end
+
+      def send_files(release)
+        cmd.ssh("mkdir -p #{release_dir}")
+
+        unless cmd.put(tmp_release_dir(release), release_dir)
+          fatal('Could not rsync release')
         end
       end
 
