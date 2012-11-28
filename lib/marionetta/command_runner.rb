@@ -171,16 +171,16 @@ module Marionetta
     # to the same location on the local machine unless a path
     # is specified. 
     # 
-    def get(file_path, save_to = File.dirname(file_path))
-      rsync("#{server[:hostname]}:#{file_path}", save_to)
+    def get(file_path, save_to = File.dirname(file_path), *additional_flags)
+      rsync("#{server[:hostname]}:#{file_path}", save_to, *additional_flags)
     end
 
     # Short hand for putting a file to `:hostname` from the
     # local machine to the same location on the remote
     # machine unless a path is specified.
     # 
-    def put(file_path, save_to = File.dirname(file_path))
-      rsync(file_path, "#{server[:hostname]}:#{save_to}")
+    def put(file_path, save_to = File.dirname(file_path), *additional_flags)
+      rsync(file_path, "#{server[:hostname]}:#{save_to}", *additional_flags)
     end
 
   private
