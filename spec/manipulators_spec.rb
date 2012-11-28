@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'marionetta/manipulators'
+require_relative '../lib/marionetta/manipulators'
 
 describe Marionetta::Manipulators do
   it 'should maintain a list of manipulators' do

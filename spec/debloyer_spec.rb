@@ -1,6 +1,6 @@
 require 'spec_helper'
-require "marionetta"
-require "marionetta/manipulators/debloyer"
+require_relative '../lib/marionetta'
+require_relative '../lib/marionetta/manipulators/debloyer'
 
 describe Marionetta::Manipulators::Debloyer do
   it 'should deploy a deb' do

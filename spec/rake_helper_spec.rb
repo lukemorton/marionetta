@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'marionetta/group'
-require 'marionetta/rake_helper'
+require_relative '../lib/marionetta/group'
+require_relative '../lib/marionetta/rake_helper'
 
 describe Marionetta::RakeHelper do
   it 'should install rake tasks' do

@@ -1,6 +1,6 @@
 require 'vagrant'
 require 'celluloid'
-require 'marionetta'
+require_relative '../lib/marionetta'
 
 LIB = File.dirname(__FILE__)+'/../lib'
 

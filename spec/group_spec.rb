@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'marionetta/group'
+require_relative '../lib/marionetta/group'
 
 describe Marionetta::Group do
   it 'should add server map' do

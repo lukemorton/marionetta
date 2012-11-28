@@ -1,6 +1,6 @@
 require 'spec_helper'
-require "marionetta"
-require "marionetta/manipulators/deployer"
+require_relative '../lib/marionetta'
+require_relative '../lib/marionetta/manipulators/deployer'
 
 def deployer()
   Marionetta::Manipulators::Deployer.new(server)
