@@ -156,17 +156,6 @@ module Marionetta
         exit(1)
       end
 
-      def run_script(script, release)
-        script_key = "#{script}_script".to_sym
-
-        if server[:deployer].has_key?(script_key)
-          script = server[:deployer][script_key]
-          cmd.put(script, '/tmp')
-          tmp_script = "/tmp/#{File.basename(script)}"
-          cmd.ssh("chmod +x #{tmp_script} && exec #{tmp_script} #{release}")
-        end
-      end
-
       def create_tmp_release_dir(release)
         tmp_release_dir = tmp_release_dir(release)
         cmd.system("mkdir -p #{tmp_release_dir}")
@@ -193,6 +182,17 @@ module Marionetta
 
         unless cmd.put(tmp_release_dir(release), release_dir)
           fatal('Could not rsync release')
+        end
+      end
+
+      def run_script(script, release)
+        script_key = "#{script}_script".to_sym
+
+        if server[:deployer].has_key?(script_key)
+          script = server[:deployer][script_key]
+          cmd.put(script, '/tmp')
+          tmp_script = "/tmp/#{File.basename(script)}"
+          cmd.ssh("chmod +x #{tmp_script} && exec #{tmp_script} #{release}")
         end
       end
 
