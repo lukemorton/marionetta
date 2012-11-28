@@ -203,6 +203,7 @@ rm -rf docs
 mv -f docs-new docs
 git add docs
 git commit -m "Update documentation."
+git push origin gh-pages
 ```
 
 ## License
