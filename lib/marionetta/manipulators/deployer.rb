@@ -169,7 +169,7 @@ module Marionetta
 
       def create_tmp_release_dir(release)
         tmp_release_dir = tmp_release_dir(release)
-        cmd.system("mkdir -p #{File.dirname(tmp_release_dir)}")
+        cmd.system("mkdir -p #{tmp_release_dir}")
 
         args = [Dir[from_dir+'/*'], tmp_release_dir]
 
