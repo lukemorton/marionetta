@@ -54,9 +54,8 @@ module Marionetta
       # Call `.deploy()` to run a deploy to your remote
       # server. The process involves:
       # 
-      #  - `:from` directory copied to temporary directory
-      #  - `:exclude` files are removed
-      #  - rsync'd to a releases directory
+      #  - `:from` directory rsync'd to releases directory
+      #    with `:exclude` files being ignored
       #  - `:before_script` run
       #  - release directory symlinked to a current directory
       #  - `:after_script` run
@@ -64,10 +63,10 @@ module Marionetta
       # The directory structure under `server[:deployer][:to]`
       # looks something like this:
       # 
-      #   current/ -> ./releases/2012-09-20_14:04:39
-      #   releases/
-      #     2012-09-20_13:59:15
-      #     2012-09-20_14:04:39
+      #     current/ -> ./releases/2012-09-20_14:04:39
+      #     releases/
+      #       2012-09-20_13:59:15
+      #       2012-09-20_14:04:39
       # 
       def deploy()
         release = timestamp
