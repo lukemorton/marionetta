@@ -9,14 +9,21 @@ task(:default => :spec)
 
 desc('Create .gem for version *committed* in lib/marionetta.rb')
 task(:gem => :spec) do
-  cmd = [
+  stash_cmd = [
     'git add -A',
     'git stash',
-    'gem build marionetta.gemspec',
-    'git stash pop',
-    'git reset',
   ]
-  system(cmd.join(' && '))
+  system(stash_cmd.join(' && '))
+
+  begin
+    system('gem build marionetta.gemspec')
+  ensure
+    unstash_cmd = [
+      'git stash pop',
+      'git reset',
+    ]
+    system(unstash_cmd.join(' && '))
+  end
 end
 
 desc('Publish version *committed* in lib/marionetta.rb')
