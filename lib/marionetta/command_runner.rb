@@ -157,7 +157,7 @@ module Marionetta
       rsync_cmd = [server[:rsync][:command]]
 
       if server[:rsync].has_key?(:flags)
-        flags = server[:rsync][:flags]
+        flags = server[:rsync][:flags].clone
         flags.concat(additional_flags) unless additional_flags.empty?
         rsync_cmd << flags
       end
