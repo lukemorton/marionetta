@@ -272,11 +272,13 @@ rsync(&lsquo;/var/www/logs&rsquo;, &lsquo;ubuntu@example.com:/var/backups/www/lo
 </code></pre>
       </td>
       <td class=code>
-        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">rsync</span><span class="p">(</span><span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="p">)</span>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">rsync</span><span class="p">(</span><span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="p">,</span> <span class="o">*</span><span class="n">additional_flags</span><span class="p">)</span>
       <span class="n">rsync_cmd</span> <span class="o">=</span> <span class="o">[</span><span class="n">server</span><span class="o">[</span><span class="ss">:rsync</span><span class="o">][</span><span class="ss">:command</span><span class="o">]]</span>
 
       <span class="k">if</span> <span class="n">server</span><span class="o">[</span><span class="ss">:rsync</span><span class="o">].</span><span class="n">has_key?</span><span class="p">(</span><span class="ss">:flags</span><span class="p">)</span>
-        <span class="n">rsync_cmd</span> <span class="o">&lt;&lt;</span> <span class="n">server</span><span class="o">[</span><span class="ss">:rsync</span><span class="o">][</span><span class="ss">:flags</span><span class="o">]</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="n">server</span><span class="o">[</span><span class="ss">:rsync</span><span class="o">][</span><span class="ss">:flags</span><span class="o">].</span><span class="n">clone</span>
+        <span class="n">flags</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">additional_flags</span><span class="p">)</span> <span class="k">unless</span> <span class="n">additional_flags</span><span class="o">.</span><span class="n">empty?</span>
+        <span class="n">rsync_cmd</span> <span class="o">&lt;&lt;</span> <span class="n">flags</span>
       <span class="k">end</span>
       
       <span class="n">rsync_cmd</span> <span class="o">&lt;&lt;</span> <span class="o">[</span><span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="o">]</span>
@@ -295,8 +297,8 @@ to the same location on the local machine unless a path
 is specified. </p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">save_to</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
-      <span class="n">rsync</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">save_to</span><span class="p">)</span>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">save_to</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="o">*</span><span class="n">additional_flags</span><span class="p">)</span>
+      <span class="n">rsync</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">save_to</span><span class="p">,</span> <span class="o">*</span><span class="n">additional_flags</span><span class="p">)</span>
     <span class="k">end</span></pre></div>
       </td>
     </tr>
@@ -311,8 +313,8 @@ machine unless a path is specified.</p>
 
       </td>
       <td class=code>
-        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">save_to</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
-      <span class="n">rsync</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">save_to</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">save_to</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="o">*</span><span class="n">additional_flags</span><span class="p">)</span>
+      <span class="n">rsync</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">save_to</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">additional_flags</span><span class="p">)</span>
     <span class="k">end</span>
 
   <span class="kp">private</span>

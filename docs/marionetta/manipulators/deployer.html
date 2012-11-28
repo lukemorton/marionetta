@@ -168,12 +168,8 @@ looks something like this:</p>
       <td class=code>
         <div class='highlight'><pre>      <span class="k">def</span> <span class="nf">deploy</span><span class="p">()</span>
         <span class="n">release</span> <span class="o">=</span> <span class="n">timestamp</span>
-        <span class="n">create_tmp_release_dir</span><span class="p">(</span><span class="n">release</span><span class="p">)</span>
-        <span class="n">cmd</span><span class="o">.</span><span class="n">ssh</span><span class="p">(</span><span class="s2">&quot;mkdir -p </span><span class="si">#{</span><span class="n">release_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="k">unless</span> <span class="n">cmd</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">tmp_release_dir</span><span class="p">(</span><span class="n">release</span><span class="p">),</span> <span class="n">release_dir</span><span class="p">)</span>
-          <span class="n">fatal</span><span class="p">(</span><span class="s1">&#39;Could not rsync release&#39;</span><span class="p">)</span>
-        <span class="k">end</span>
+        <span class="n">send_files</span><span class="p">(</span><span class="n">release</span><span class="p">)</span>
 
         <span class="n">run_script</span><span class="p">(</span><span class="ss">:before</span><span class="p">,</span> <span class="n">release</span><span class="p">)</span>
         <span class="n">symlink_release_dir</span><span class="p">(</span><span class="n">release</span><span class="p">)</span>
@@ -194,7 +190,7 @@ be listed.</p>
         <div class='highlight'><pre>      <span class="k">def</span> <span class="nf">releases</span><span class="p">()</span>
         <span class="n">releases</span> <span class="o">=</span> <span class="o">[]</span>
 
-        <span class="n">cmd</span><span class="o">.</span><span class="n">ssh</span><span class="p">(</span><span class="s2">&quot;ls -m </span><span class="si">#{</span><span class="n">release_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">stdout</span><span class="o">|</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">ssh</span><span class="p">(</span><span class="s2">&quot;ls -m </span><span class="si">#{</span><span class="n">releases_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">stdout</span><span class="o">|</span>
           <span class="n">stdout</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">/[,\s]+/</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">release</span><span class="o">|</span>
             <span class="n">releases</span> <span class="o">&lt;&lt;</span> <span class="n">release</span> <span class="k">unless</span> <span class="n">release</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;skip-&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
           <span class="k">end</span>
@@ -264,18 +260,16 @@ set an object of your choice via the <code>.cmd=</code> method.</p>
         <span class="n">server</span><span class="o">[</span><span class="ss">:deployer</span><span class="o">][</span><span class="ss">:from</span><span class="o">]</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">tmp_release_dir</span><span class="p">(</span><span class="n">release</span><span class="p">)</span>
-        <span class="s2">&quot;/tmp/</span><span class="si">#{</span><span class="n">server</span><span class="o">[</span><span class="ss">:hostname</span><span class="o">]</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">release</span><span class="si">}</span><span class="s2">&quot;</span>
-      <span class="k">end</span>
-
       <span class="k">def</span> <span class="nf">to_dir</span><span class="p">()</span>
         <span class="n">server</span><span class="o">[</span><span class="ss">:deployer</span><span class="o">][</span><span class="ss">:to</span><span class="o">]</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">release_dir</span><span class="p">(</span><span class="n">release</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span>
-        <span class="n">dir</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">to_dir</span><span class="si">}</span><span class="s2">/releases&quot;</span>
-        <span class="n">dir</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;/</span><span class="si">#{</span><span class="n">release</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">unless</span> <span class="n">release</span><span class="o">.</span><span class="n">nil?</span>
-        <span class="k">return</span> <span class="n">dir</span>
+      <span class="k">def</span> <span class="nf">releases_dir</span><span class="p">()</span>
+        <span class="s2">&quot;</span><span class="si">#{</span><span class="n">to_dir</span><span class="si">}</span><span class="s2">/releases&quot;</span>
+      <span class="k">end</span>
+      
+      <span class="k">def</span> <span class="nf">release_dir</span><span class="p">(</span><span class="n">release</span><span class="p">)</span>
+        <span class="s2">&quot;</span><span class="si">#{</span><span class="n">releases_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">release</span><span class="si">}</span><span class="s2">&quot;</span>
       <span class="k">end</span>
 
       <span class="k">def</span> <span class="nf">current_dir</span><span class="p">()</span>
@@ -288,6 +282,31 @@ set an object of your choice via the <code>.cmd=</code> method.</p>
         <span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">end</span>
 
+      <span class="k">def</span> <span class="nf">rsync_exclude_flags</span><span class="p">(</span><span class="n">exclude_files</span><span class="p">)</span>
+        <span class="n">exclude_files</span> <span class="o">=</span> <span class="n">exclude_files</span><span class="o">.</span><span class="n">clone</span>
+        <span class="n">exclude_files</span><span class="o">.</span><span class="n">map!</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">Dir</span><span class="o">[</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">from_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">]</span><span class="p">}</span>
+        <span class="n">exclude_files</span><span class="o">.</span><span class="n">flatten!</span>
+        <span class="n">exclude_files</span><span class="o">.</span><span class="n">map!</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">from_dir</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)}</span>
+        <span class="n">exclude_files</span><span class="o">.</span><span class="n">map!</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="o">[</span><span class="s1">&#39;--exclude&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">]</span><span class="p">}</span>
+        <span class="n">exclude_files</span><span class="o">.</span><span class="n">flatten!</span>
+        <span class="k">return</span> <span class="n">exclude_files</span>
+      <span class="k">end</span>
+
+      <span class="k">def</span> <span class="nf">send_files</span><span class="p">(</span><span class="n">release</span><span class="p">)</span>
+        <span class="n">release_dir</span> <span class="o">=</span> <span class="n">release_dir</span><span class="p">(</span><span class="n">release</span><span class="p">)</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">ssh</span><span class="p">(</span><span class="s2">&quot;mkdir -p </span><span class="si">#{</span><span class="n">release_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="o">[</span><span class="no">Dir</span><span class="o">[</span><span class="n">from_dir</span><span class="o">+</span><span class="s1">&#39;/*&#39;</span><span class="o">]</span><span class="p">,</span> <span class="n">release_dir</span><span class="o">]</span>
+
+        <span class="k">if</span> <span class="n">server</span><span class="o">[</span><span class="ss">:deployer</span><span class="o">].</span><span class="n">has_key?</span><span class="p">(</span><span class="ss">:exclude</span><span class="p">)</span>
+          <span class="n">args</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">rsync_exclude_flags</span><span class="p">(</span><span class="n">server</span><span class="o">[</span><span class="ss">:deployer</span><span class="o">][</span><span class="ss">:exclude</span><span class="o">]</span><span class="p">))</span>
+        <span class="k">end</span>
+
+        <span class="k">unless</span> <span class="n">cmd</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+          <span class="n">fatal</span><span class="p">(</span><span class="s1">&#39;Could not rsync release&#39;</span><span class="p">)</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+
       <span class="k">def</span> <span class="nf">run_script</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">release</span><span class="p">)</span>
         <span class="n">script_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">script</span><span class="si">}</span><span class="s2">_script&quot;</span><span class="o">.</span><span class="n">to_sym</span>
 
@@ -296,24 +315,6 @@ set an object of your choice via the <code>.cmd=</code> method.</p>
           <span class="n">cmd</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="s1">&#39;/tmp&#39;</span><span class="p">)</span>
           <span class="n">tmp_script</span> <span class="o">=</span> <span class="s2">&quot;/tmp/</span><span class="si">#{</span><span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">script</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
           <span class="n">cmd</span><span class="o">.</span><span class="n">ssh</span><span class="p">(</span><span class="s2">&quot;chmod +x </span><span class="si">#{</span><span class="n">tmp_script</span><span class="si">}</span><span class="s2"> &amp;&amp; exec </span><span class="si">#{</span><span class="n">tmp_script</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">release</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">end</span>
-      <span class="k">end</span>
-
-      <span class="k">def</span> <span class="nf">create_tmp_release_dir</span><span class="p">(</span><span class="n">release</span><span class="p">)</span>
-        <span class="n">tmp_release_dir</span> <span class="o">=</span> <span class="n">tmp_release_dir</span><span class="p">(</span><span class="n">release</span><span class="p">)</span>
-
-        <span class="n">create_tmp_dir_cmds</span> <span class="o">=</span> <span class="o">[</span>
-          <span class="s2">&quot;mkdir -p </span><span class="si">#{</span><span class="no">File</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">tmp_release_dir</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;cp -rf </span><span class="si">#{</span><span class="n">from_dir</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">tmp_release_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-        <span class="o">]</span>
-        <span class="n">cmd</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">create_tmp_dir_cmds</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &amp;&amp; &#39;</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="n">server</span><span class="o">[</span><span class="ss">:deployer</span><span class="o">].</span><span class="n">has_key?</span><span class="p">(</span><span class="ss">:exclude</span><span class="p">)</span>
-          <span class="n">exclude_files</span> <span class="o">=</span> <span class="n">server</span><span class="o">[</span><span class="ss">:deployer</span><span class="o">][</span><span class="ss">:exclude</span><span class="o">]</span>
-          <span class="n">exclude_files</span><span class="o">.</span><span class="n">map!</span> <span class="p">{</span><span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">Dir</span><span class="o">[</span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">tmp_release_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="n">f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">]</span><span class="p">}</span>
-          <span class="n">exclude_files</span><span class="o">.</span><span class="n">flatten!</span>
-
-          <span class="n">cmd</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;rm -rf </span><span class="si">#{</span><span class="n">exclude_files</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="n">exclude_files</span><span class="o">.</span><span class="n">empty?</span>
         <span class="k">end</span>
       <span class="k">end</span>
 
