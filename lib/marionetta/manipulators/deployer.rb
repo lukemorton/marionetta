@@ -174,7 +174,7 @@ module Marionetta
         args = [from_dir, tmp_release_dir]
 
         if server[:deployer].has_key?(:exclude)
-          exclude_files = server[:deployer][:exclude]
+          exclude_files = server[:deployer][:exclude].clone
           exclude_files.map! {|f| Dir["#{from_dir}/#{f}"]}
           exclude_files.flatten!
           exclude_files.map! {|f| f.sub(from_dir, File.basename(from_dir))}
