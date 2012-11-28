@@ -176,7 +176,11 @@ one too, feedback is always welcome.
 
 ## Testing
 
-To test run `rake`.
+To test run this on your command line:
+
+```
+rake
+```
 
 You need to ensure `spec/vagrant/key` has `0600` permissions.
 
