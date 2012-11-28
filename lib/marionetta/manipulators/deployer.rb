@@ -156,6 +156,16 @@ module Marionetta
         exit(1)
       end
 
+      def rsync_exclude_flags(exclude_files)
+        exclude_files = exclude_files.clone
+        exclude_files.map! {|f| Dir["#{from_dir}/#{f}"]}
+        exclude_files.flatten!
+        exclude_files.map! {|f| f.sub(from_dir+'/', '')}
+        exclude_files.map! {|f| ['--exclude', f]}
+        exclude_files.flatten!
+        return exclude_files
+      end
+
       def create_tmp_release_dir(release)
         tmp_release_dir = tmp_release_dir(release)
         cmd.system("mkdir -p #{tmp_release_dir}")
@@ -163,15 +173,7 @@ module Marionetta
         args = [Dir[from_dir+'/*'], tmp_release_dir]
 
         if server[:deployer].has_key?(:exclude)
-          exclude_files = server[:deployer][:exclude].clone
-          exclude_files.map! {|f| Dir["#{from_dir}/#{f}"]}
-          exclude_files.flatten!
-          exclude_files.map! {|f| f.sub(from_dir+'/', '')}
-
-          exclude_files.each do |f|
-            args << '--exclude'
-            args << f
-          end
+          args.concat(rsync_exclude_flags(server[:deployer][:exclude]))
         end
 
         cmd.rsync(*args)
