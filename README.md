@@ -174,6 +174,12 @@ Create an issue and send a pull request if you get any bright
 ideas or have a fix. Feel free to create an issue and not send
 one too, feedback is always welcome.
 
+## Testing
+
+To test run `rake`.
+
+You need to ensure `spec/vagrant/key` has `0600` permissions.
+
 ## License
 
 Licensed under MIT by Luke Morton, 2012.
