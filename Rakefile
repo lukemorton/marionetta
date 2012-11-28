@@ -7,6 +7,7 @@ RSpec::Core::RakeTask.new(:spec)
 
 task(:default => :spec)
 
+desc('Create .gem for version *committed* in lib/marionetta.rb')
 task(:gem => :spec) do
   cmd = [
     'git add -A',
@@ -18,6 +19,7 @@ task(:gem => :spec) do
   system(cmd.join(' && '))
 end
 
+desc('Publish version *committed* in lib/marionetta.rb')
 task(:publish => :gem) do
   version = Marionetta::VERSION
   git_tag = "v#{version}"
@@ -34,6 +36,7 @@ task(:publish => :gem) do
   system(cmd.join(' && '))
 end
 
+desc('Create documentation for current working directory')
 task(:doc) do
   docs_cmd = [
     'rm -rf docs',
@@ -43,6 +46,7 @@ task(:doc) do
   system(docs_cmd.join(' && '))
 end
 
+desc('Remove *.gem')
 task(:clean) do
   system('rm *.gem')
 end
