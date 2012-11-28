@@ -71,7 +71,6 @@ module Marionetta
       # 
       def deploy()
         release = timestamp
-        create_tmp_release_dir(release)
 
         send_files(release)
 
@@ -132,10 +131,6 @@ module Marionetta
         server[:deployer][:from]
       end
 
-      def tmp_release_dir(release)
-        "/tmp/#{server[:hostname]}/#{release}"
-      end
-
       def to_dir()
         server[:deployer][:to]
       end
@@ -166,23 +161,17 @@ module Marionetta
         return exclude_files
       end
 
-      def create_tmp_release_dir(release)
-        tmp_release_dir = tmp_release_dir(release)
-        cmd.system("mkdir -p #{tmp_release_dir}")
+      def send_files(release)
+        release_dir = release_dir(release)
+        cmd.ssh("mkdir -p #{release_dir}")
 
-        args = [Dir[from_dir+'/*'], tmp_release_dir]
+        args = [Dir[from_dir+'/*'], release_dir]
 
         if server[:deployer].has_key?(:exclude)
           args.concat(rsync_exclude_flags(server[:deployer][:exclude]))
         end
 
-        cmd.rsync(*args)
-      end
-
-      def send_files(release)
-        cmd.ssh("mkdir -p #{release_dir}")
-
-        unless cmd.put(tmp_release_dir(release), release_dir)
+        unless cmd.put(*args)
           fatal('Could not rsync release')
         end
       end
