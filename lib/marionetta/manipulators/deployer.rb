@@ -171,13 +171,13 @@ module Marionetta
         tmp_release_dir = tmp_release_dir(release)
         cmd.system("mkdir -p #{File.dirname(tmp_release_dir)}")
 
-        args = [from_dir, tmp_release_dir]
+        args = [Dir[from_dir+'/*'], tmp_release_dir]
 
         if server[:deployer].has_key?(:exclude)
           exclude_files = server[:deployer][:exclude].clone
           exclude_files.map! {|f| Dir["#{from_dir}/#{f}"]}
           exclude_files.flatten!
-          exclude_files.map! {|f| f.sub(from_dir, File.basename(from_dir))}
+          exclude_files.map! {|f| f.sub(from_dir+'/', '')}
 
           exclude_files.each do |f|
             args << '--exclude'
