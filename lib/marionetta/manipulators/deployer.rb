@@ -138,6 +138,14 @@ module Marionetta
         server[:deployer][:to]
       end
 
+      def tmp_dir()
+        if server[:deployer].has_key?(:tmp)
+          server[:deployer][:tmp]
+        else
+          '/tmp'
+        end
+      end
+
       def cache_dir()
         "#{to_dir}/cache"
       end
@@ -196,8 +204,8 @@ module Marionetta
 
         if server[:deployer].has_key?(script_key)
           script = server[:deployer][script_key]
-          cmd.put(script, '/tmp')
-          tmp_script = "/tmp/#{File.basename(script)}"
+          cmd.put(script, tmp_dir)
+          tmp_script = "#{tmp_dir}/#{File.basename(script)}"
           cmd.ssh("chmod +x #{tmp_script} && exec #{tmp_script} #{release}")
         end
       end
