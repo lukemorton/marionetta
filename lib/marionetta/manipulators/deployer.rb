@@ -182,7 +182,7 @@ module Marionetta
         end
 
         unless cmd.put(*args)
-          fatal('Could not rsync release')
+          fatal('Could not rsync cache dir')
         end
       end
 
