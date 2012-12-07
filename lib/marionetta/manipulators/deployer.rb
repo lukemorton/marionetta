@@ -77,6 +77,7 @@ module Marionetta
         sync_cache_dir()
         copy_cache_dir_to_release(release)
 
+        send_scripts()
         run_script(:before, release)
         symlink_release_dir(release)
         run_script(:after, release)
@@ -199,12 +200,27 @@ module Marionetta
         cmd.ssh("mkdir -p #{releases_dir} && cp -r #{cache_dir} #{release_dir}")
       end
 
+      def send_scripts()
+        files = []
+
+        [:before, :after].each do |script|
+          script_key = "#{script}_script".to_sym
+
+          if server[:deployer].has_key?(script_key)
+            files << server[:deployer][script_key]
+          end
+        end
+
+        unless files.empty?
+          cmd.put(files, tmp_dir)
+        end
+      end
+
       def run_script(script, release)
         script_key = "#{script}_script".to_sym
 
         if server[:deployer].has_key?(script_key)
           script = server[:deployer][script_key]
-          cmd.put(script, tmp_dir)
           tmp_script = "#{tmp_dir}/#{File.basename(script)}"
           cmd.ssh("chmod +x #{tmp_script} && exec #{tmp_script} #{release}")
         end
