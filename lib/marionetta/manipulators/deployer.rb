@@ -188,7 +188,7 @@ module Marionetta
 
       def copy_cache_dir_to_release(release)
         release_dir = release_dir(release)
-        cmd.ssh("cp -r #{cache_dir} #{release_dir}")
+        cmd.ssh("mkdir -p #{releases_dir} && cp -r #{cache_dir} #{release_dir}")
       end
 
       def send_files(release)
