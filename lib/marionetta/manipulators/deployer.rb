@@ -54,8 +54,10 @@ module Marionetta
       # Call `.deploy()` to run a deploy to your remote
       # server. The process involves:
       # 
-      #  - `:from` directory rsync'd to releases directory
+      #  - `:from` directory rsync'd to cache directory
       #    with `:exclude` files being ignored
+      #  - `:from` directory copied on remote machine to
+      #    releases directory
       #  - `:before_script` run
       #  - release directory symlinked to a current directory
       #  - `:after_script` run
@@ -71,7 +73,9 @@ module Marionetta
       def deploy()
         release = timestamp
 
-        send_files(release)
+        create_cache_dir()
+        sync_cache_dir()
+        copy_cache_dir_to_release(release)
 
         run_script(:before, release)
         symlink_release_dir(release)
@@ -134,6 +138,10 @@ module Marionetta
         server[:deployer][:to]
       end
 
+      def cache_dir()
+        "#{to_dir}/cache"
+      end
+
       def releases_dir()
         "#{to_dir}/releases"
       end
@@ -160,6 +168,27 @@ module Marionetta
         exclude_files.map! {|f| ['--exclude', f]}
         exclude_files.flatten!
         return exclude_files
+      end
+
+      def create_cache_dir()
+        cmd.ssh("test -d #{cache_dir} || mkdir -p #{cache_dir}")
+      end
+
+      def sync_cache_dir()
+        args = [Dir[from_dir+'/*'], cache_dir]
+
+        if server[:deployer].has_key?(:exclude)
+          args.concat(rsync_exclude_flags(server[:deployer][:exclude]))
+        end
+
+        unless cmd.put(*args)
+          fatal('Could not rsync release')
+        end
+      end
+
+      def copy_cache_dir_to_release(release)
+        release_dir = release_dir(release)
+        cmd.ssh("cp -r #{cache_dir} #{release_dir}")
       end
 
       def send_files(release)
