@@ -191,21 +191,6 @@ module Marionetta
         cmd.ssh("mkdir -p #{releases_dir} && cp -r #{cache_dir} #{release_dir}")
       end
 
-      def send_files(release)
-        release_dir = release_dir(release)
-        cmd.ssh("mkdir -p #{release_dir}")
-
-        args = [Dir[from_dir+'/*'], release_dir]
-
-        if server[:deployer].has_key?(:exclude)
-          args.concat(rsync_exclude_flags(server[:deployer][:exclude]))
-        end
-
-        unless cmd.put(*args)
-          fatal('Could not rsync release')
-        end
-      end
-
       def run_script(script, release)
         script_key = "#{script}_script".to_sym
 
