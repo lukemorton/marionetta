@@ -4,6 +4,7 @@
 # Using a directory structure similar to capistrano `Deployer`
 # maintains a folder of releases so you may rollback quickly.
 # 
+require 'marionetta'
 require 'marionetta/command_runner'
 
 module Marionetta
@@ -144,7 +145,7 @@ module Marionetta
         if server[:deployer].has_key?(:tmp)
           server[:deployer][:tmp]
         else
-          '/tmp'
+          Marionetta.default_server[:deployer][:tmp]
         end
       end
 
