@@ -54,9 +54,9 @@ module Marionetta
       # Call `.deploy()` to run a deploy to your remote
       # server. The process involves:
       # 
-      #  - `:from` directory rsync'd to cache directory
+      #  - `:from` directory rsync'd to remote cache directory
       #    with `:exclude` files being ignored
-      #  - `:from` directory copied on remote machine to
+      #  - cache directory copied on remote machine to
       #    releases directory
       #  - `:before_script` run
       #  - release directory symlinked to a current directory
@@ -65,6 +65,7 @@ module Marionetta
       # The directory structure under `server[:deployer][:to]`
       # looks something like this:
       # 
+      #     cache/
       #     current/ -> ./releases/2012-09-20_14:04:39
       #     releases/
       #       2012-09-20_13:59:15
