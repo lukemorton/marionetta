@@ -73,7 +73,7 @@ module Marionetta
       #       2012-09-20_14:04:39
       # 
       def deploy()
-        release = timestamp
+        release = create_release_name()
 
         create_cache_dir()
         sync_cache_dir()
@@ -169,6 +169,10 @@ module Marionetta
         server[:logger].fatal(cmd.last)
         server[:logger].fatal(message)
         exit(1)
+      end
+
+      def create_release_name()
+        timestamp
       end
 
       def rsync_exclude_flags(exclude_files)
