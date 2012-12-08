@@ -74,7 +74,9 @@ module Marionetta
 
       :puppet => {},
 
-      :deployer => {},
+      :deployer => {
+        :tmp => '/tmp'
+      },
 
       :debloyer => {
         :name => 'debloyer',
