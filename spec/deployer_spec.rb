@@ -14,6 +14,7 @@ describe Marionetta::Manipulators::Deployer do
   it 'should deploy' do
     cmd.ssh('rm -rf ~/app')
     deployer.deploy
+    deployer.deploy
     cmd.ssh("[ -L ~/app/current ]").should == true
     cmd.ssh("[ -d ~/app/releases ]").should == true
     cmd.ssh("[ -f ~/app/current/app.rb ]").should == true
