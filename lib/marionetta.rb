@@ -27,7 +27,7 @@
 # 
 module Marionetta
 
-  VERSION = '0.4.4'
+  VERSION = '0.4.5'
 
   ### Defining Servers
 
