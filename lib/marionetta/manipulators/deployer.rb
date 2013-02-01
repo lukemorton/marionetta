@@ -172,7 +172,18 @@ module Marionetta
       end
 
       def create_release_name()
-        timestamp
+        name = timestamp
+
+        if server[:deployer].has_key?(:version)
+          version_cmd = server[:deployer][:version][:command]
+
+          cmd.system("cd #{from_dir} && #{version_cmd}") do |stdout|
+            version = stdout.read.strip
+            name << "_#{version}" unless version.empty?
+          end
+        end
+
+        return name
       end
 
       def rsync_exclude_flags(exclude_files)
