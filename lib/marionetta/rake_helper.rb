@@ -22,6 +22,27 @@ module Marionetta
       end
     end
 
+    def install_group_task(group, manipulation, task_deps = [])
+      groups = [group]
+
+      group.groups.each do |g|
+        groups << g
+      end
+
+      manipulator, method_name = manipulation
+
+      groups.each do |g|
+        class_name = manipulator.name.split('::').last.downcase
+        task_desc = task_desc(g, class_name, method_name)
+        task_name = task_name(g, class_name, method_name)
+
+        desc(task_desc)
+        task(task_name => task_deps) do
+          g.manipulate_each_server(manipulator, method_name)
+        end
+      end
+    end
+
   private
 
     def install_group_tasks_for(group)
