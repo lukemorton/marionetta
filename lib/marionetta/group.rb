@@ -114,16 +114,20 @@ module Marionetta
     # If block passed in then the server and return value for
     # each server will be passed in when complete.
     # 
-    def manipulate_each_server(manipulator_name, method_name)
+    def manipulate_each_server(manipulator_class, method_name)
       each_server do |s|
-        manipulator = Manipulators[manipulator_name].new(s)
+        if manipulator_class.is_a? Symbol
+          manipulator_class = Manipulators[manipulator_class]
+        end
+
+        manipulator = manipulator_class.new(s)
 
         if manipulator.can?
           return_val = manipulator.method(method_name).call()
           yield s, return_val if block_given?
         else
           s[:logger].warn(
-            "Could not Manipulators[:#{manipulator_name}].#{method_name}()")
+            "Could not Manipulators[:#{manipulator.class.name}].#{method_name}()")
         end
       end
     end
