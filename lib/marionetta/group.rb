@@ -65,7 +65,8 @@ module Marionetta
     # Get servers in this group and all descendant groups.
     # 
     def servers()
-      servers = @servers
+      servers  = []
+      servers.concat(@servers)
 
       @groups.each do |g|
         servers.concat(g.servers)
