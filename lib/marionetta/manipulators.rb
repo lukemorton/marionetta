@@ -24,7 +24,7 @@ module Marionetta
       {
         :deployer => Deployer,
         :debloyer => Debloyer,
-        :puppet   => PuppetManipulator,
+        :puppet   => Puppet,
       }
     end
 

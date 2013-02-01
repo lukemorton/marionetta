@@ -11,7 +11,7 @@ require 'marionetta/command_runner'
 
 module Marionetta
   module Manipulators
-    class PuppetManipulator
+    class Puppet
 
       ### RakeHelper tasks
 
