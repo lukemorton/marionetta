@@ -6,6 +6,7 @@
 # 
 require 'marionetta'
 require 'marionetta/commandable'
+require 'marionetta/directory_sync'
 
 module Marionetta
   module Manipulators
@@ -76,8 +77,7 @@ module Marionetta
       def deploy()
         release = create_release_name()
 
-        create_cache_dir()
-        sync_cache_dir()
+        DirectorySync.sync(server, from_dir, cache_dir, server[:deployer])
         copy_cache_dir_to_release(release)
 
         send_scripts()
@@ -172,32 +172,6 @@ module Marionetta
         end
 
         return name
-      end
-
-      def rsync_exclude_flags(exclude_files)
-        exclude_files = exclude_files.clone
-        exclude_files.map! {|f| Dir["#{from_dir}/#{f}"]}
-        exclude_files.flatten!
-        exclude_files.map! {|f| f.sub(from_dir+'/', '')}
-        exclude_files.map! {|f| ['--exclude', f]}
-        exclude_files.flatten!
-        return exclude_files
-      end
-
-      def create_cache_dir()
-        cmd.ssh("test -d #{cache_dir} || mkdir -p #{cache_dir}")
-      end
-
-      def sync_cache_dir()
-        args = [Dir[from_dir+'/*'], cache_dir]
-
-        if server[:deployer].has_key?(:exclude)
-          args.concat(rsync_exclude_flags(server[:deployer][:exclude]))
-        end
-
-        unless cmd.put(*args)
-          fatal('Could not rsync cache dir')
-        end
       end
 
       def copy_cache_dir_to_release(release)
