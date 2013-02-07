@@ -53,7 +53,10 @@ module Marionetta
       # to install puppet on debian or ubuntu servers.
       # 
       def install()
-        install_deb_repo
+        unless server[:puppet].has_key?(:use_distro_repo) and server[:puppet][:use_distro_repo] == true
+          install_deb_repo
+        end
+
         install_deb
       end
 
