@@ -50,8 +50,9 @@ module Marionetta
           yield stdout, stderr if block_given?
 
           [stdout, stderr].each do |io|
-            str = io.read
-            server[:logger].debug(str) unless str.empty?
+            io.each do |line|
+              server[:logger].debug(line) unless line.empty?
+            end
           end
         end
       rescue
