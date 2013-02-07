@@ -153,12 +153,6 @@ module Marionetta
         "#{to_dir}/current"
       end
 
-      def fatal(message)
-        server[:logger].fatal(cmd.last)
-        server[:logger].fatal(message)
-        exit(1)
-      end
-
       def create_release_name()
         name = timestamp
 
@@ -209,7 +203,9 @@ module Marionetta
         release_dir = release_dir(release)
 
         unless cmd.ssh("rm -f #{current_dir} && ln -s #{release_dir} #{current_dir}")
-          fatal('Could not symlink release as current')
+          server[:logger].fatal(cmd.last)
+          server[:logger].fatal('Could not symlink release as current')
+          exit(1)
         end
       end
 

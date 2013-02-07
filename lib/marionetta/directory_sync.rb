@@ -49,7 +49,9 @@ module Marionetta
       end
 
       unless cmd.put(*args)
-        fatal('Could not rsync cache dir')
+        server[:logger].fatal(cmd.last)
+        server[:logger].fatal('Could not rsync cache dir')
+        exit(1)
       end
     end
   end
