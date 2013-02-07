@@ -5,7 +5,7 @@
 # maintains a folder of releases so you may rollback quickly.
 # 
 require 'marionetta'
-require 'marionetta/command_runner'
+require 'marionetta/commandable'
 
 module Marionetta
   module Manipulators
