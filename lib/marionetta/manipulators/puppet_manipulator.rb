@@ -12,6 +12,7 @@ require 'marionetta/command_runner'
 module Marionetta
   module Manipulators
     class Puppet
+      include Commandable
 
       ### RakeHelper tasks
 
@@ -71,21 +72,8 @@ module Marionetta
         send_archive
         apply_archive
       end
-      
-      ### Dependency Injection
-
-      # To use your own alternative to `CommandRunner` you can
-      # set an object of your choice via the `.cmd=` method.
-      # 
-      attr_writer :cmd
 
     private
-    
-      attr_reader :server
-
-      def cmd()
-        @cmd ||= CommandRunner.new(server)
-      end
 
       def installed?()
         cmd.ssh('which puppet')
