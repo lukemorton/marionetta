@@ -10,6 +10,7 @@ require 'marionetta/command_runner'
 module Marionetta
   module Manipulators
     class Deployer
+      include Commandable
 
       ### RakeHelper tasks
 
@@ -117,21 +118,8 @@ module Marionetta
           symlink_release_dir(rollback_to_release)
         end
       end
-      
-      ### Dependency Injection
-
-      # To use your own alternative to `CommandRunner` you can
-      # set an object of your choice via the `.cmd=` method.
-      # 
-      attr_writer :cmd
 
     private
-      
-      attr_reader :server
-
-      def cmd()
-        @cmd ||= CommandRunner.new(server)
-      end
 
       def from_dir()
         server[:deployer][:from]
