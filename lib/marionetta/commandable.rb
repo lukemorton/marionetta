@@ -1,3 +1,5 @@
+require 'marionetta/command_runner'
+
 module Marionetta
   module Commandable
     ### Dependency Injection

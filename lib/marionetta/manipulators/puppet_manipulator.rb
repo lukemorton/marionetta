@@ -7,7 +7,7 @@
 # master or want to push changes from your machine directly to
 # nodes them this class maybe what you're looking for.
 # 
-require 'marionetta/command_runner'
+require 'marionetta/commandable'
 
 module Marionetta
   module Manipulators
