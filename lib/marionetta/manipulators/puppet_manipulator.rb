@@ -12,7 +12,7 @@ require 'marionetta/command_runner'
 module Marionetta
   module Manipulators
     class Puppet
-      include Commandable
+      include Marionetta::Commandable
 
       ### RakeHelper tasks
 
