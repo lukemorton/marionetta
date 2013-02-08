@@ -177,10 +177,15 @@ module Marionetta
         files = []
 
         [:before, :after].each do |script|
-          script_key = "#{script}_script".to_sym
+          singular_script_key = "#{script}_script".to_sym
+          plural_script_key = "#{script}_scripts".to_sym
 
-          if server[:deployer].has_key?(script_key)
-            files << server[:deployer][script_key]
+          if server[:deployer].has_key?(singular_script_key)
+            files << server[:deployer][singular_script_key]
+          end
+
+          if server[:deployer].has_key?(plural_script_key)
+            files.concat(server[:deployer][plural_script_key])
           end
         end
 

@@ -175,8 +175,6 @@ staging.manipulate_each_server(:deployer, :rollback)
  - Use a single SSH connection per task (v0.5.x)
  - Add ability to define shared directories with Manipulators::Deployer
  - Add ability to define permissions with Manipulators::Deployer
- - Change :before_script and :after_script to :before_scripts and :after_scripts
-   that take an array
 
 ## Author
 

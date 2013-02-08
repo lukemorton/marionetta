@@ -22,6 +22,7 @@ describe Marionetta::Manipulators::Deployer do
     cmd.ssh("[ -f ~/app/current/exclude.txt ]").should_not == true
     cmd.ssh("[ -f ~/app/current/exclude/another.txt ]").should_not == true
     cmd.ssh("[ -f ~/app/current/after ]").should_not == true
+    cmd.ssh("[ -f ~/app/current/after2 ]").should_not == true
   end
 
   it 'should list releases' do
