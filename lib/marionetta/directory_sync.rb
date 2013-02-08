@@ -4,7 +4,7 @@ module Marionetta
   class DirectorySync
     include Commandable
 
-    def self.sync(server, from, to, options)
+    def self.sync(server, from, to, options = {})
       new(server).sync(from, to, options)
     end
 
@@ -12,9 +12,16 @@ module Marionetta
       @server = server
     end
 
-    def sync(from, to, options)
+    def sync(from, to, options = {})
       create_dir(to)
-      sync_dir(from, to, options[:exclude])
+
+      if options.has_key?(:exclude)
+        excludes = options[:exclude]
+      else
+        excludes = []
+      end
+
+      sync_dir(from, to, excludes)
     end
 
   private
