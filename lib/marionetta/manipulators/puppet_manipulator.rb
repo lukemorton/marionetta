@@ -8,6 +8,7 @@
 # nodes them this class maybe what you're looking for.
 # 
 require 'marionetta/commandable'
+require 'marionetta/directory_sync'
 
 module Marionetta
   module Manipulators
@@ -71,9 +72,8 @@ module Marionetta
       # 
       def update()
         install unless installed?
-        archive_files
-        send_archive
-        apply_archive
+        send_puppet_files
+        apply_puppet_files
       end
 
     private
@@ -109,36 +109,27 @@ module Marionetta
         "/tmp/puppet_#{server[:hostname]}"
       end
 
-      def archive_files()
-        cmds = [
-          "rm -rf #{puppet_tmp}",
-          "mkdir #{puppet_tmp}",
-          "cp #{server[:puppet][:manifest]} #{puppet_tmp}/manifest.pp",
-        ]
+      def send_puppet_files()
+        from = [server[:puppet][:manifest]]
 
         if server[:puppet].has_key?(:modules)
-          cmds << "cp -r #{server[:puppet][:modules]} #{puppet_tmp}/modules"
+          from << server[:puppet][:modules]
         end
 
-        cmd.system(cmds.join(' && '))
-        cmd.archive(puppet_tmp)
+        cmd.put(from, puppet_tmp)
       end
 
-      def send_archive()
-        cmd.put("#{puppet_tmp}.tar.gz")
-      end
-
-      def apply_archive()
-        cmd.ssh_extract("#{puppet_tmp}.tar.gz")
+      def apply_puppet_files()
         cmds = ["cd #{puppet_tmp}"]
 
         puppet_cmd = ['sudo puppet apply']
 
         if server[:puppet].has_key?(:modules)
-          puppet_cmd << "--modulepath=#{puppet_tmp}/modules"
+          module_basename = File.basename(server[:puppet][:modules])
+          puppet_cmd << "--modulepath=#{puppet_tmp}/#{module_basename}"
         end
 
-        puppet_cmd << 'manifest.pp'
+        puppet_cmd << File.basename(server[:puppet][:manifest])
 
         if server[:puppet].has_key?(:flags)
           puppet_cmd << server[:puppet][:flags]
