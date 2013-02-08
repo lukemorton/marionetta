@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rake'
 require_relative '../lib/marionetta/group'
 require_relative '../lib/marionetta/rake_helper'
 
@@ -8,8 +9,7 @@ describe Marionetta::RakeHelper do
     vagrant.add_server(server)
 
     # Marionetta::RakeHelper.install_group_tasks(vagrant)
-    
-    task(:help) do; p 'ey'; end
+    Rake::Task.define_task(:help) do; p 'ey'; end
 
     Marionetta::RakeHelper.install_group_task(
       vagrant,
