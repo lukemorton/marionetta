@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../lib/marionetta/manipulators/puppet_manipulator'
+require_relative '../lib/marionetta/manipulators/puppet'
 
 describe Marionetta::Manipulators::Puppet do
   it 'should manipulate one server map' do

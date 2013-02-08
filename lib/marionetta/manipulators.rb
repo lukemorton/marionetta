@@ -16,7 +16,7 @@ module Marionetta
     # 
     require_relative 'manipulators/deployer'
     require_relative 'manipulators/debloyer'
-    require_relative 'manipulators/puppet_manipulator'
+    require_relative 'manipulators/puppet'
 
     # A hash of all the manipulators.
     # 
