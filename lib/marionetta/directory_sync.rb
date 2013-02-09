@@ -42,10 +42,15 @@ module Marionetta
     end
 
     def rsync_exclude_flags(exclude_files)
-      exclude_files.map! {|f| ['--exclude', f]}
-      exclude_files.flatten!
+      excludes_path = '/tmp/exclude-rsync'
+      excludes_file = File.open(excludes_path, 'w')
 
-      return exclude_files
+      exclude_files.each do |f|
+        excludes_file << "#{f}\n"
+      end
+
+      excludes_file.close
+      return ['--exclude-from', excludes_path]
     end
 
     def sync_dir(from, to, exclude_files = [])
