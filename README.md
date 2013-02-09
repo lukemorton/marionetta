@@ -166,7 +166,6 @@ staging.manipulate_each_server(:deployer, :rollback)
 
 ## Upcoming
 
- - Add clean up for deployments (v0.4.x)
  - Add puppet safe-upgrade ability (v0.4.x)
  - Remove rollback feature... we don't need rollbacks IMO. (v0.5.x)
  - Remove Marionetta::Manipulators::Debloyer (v0.5.x) 

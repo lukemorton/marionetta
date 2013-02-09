@@ -32,4 +32,9 @@ describe Marionetta::Manipulators::Deployer do
   it 'should rollback' do
     deployer.rollback
   end
+
+  it 'should clean up' do
+    deployer.clean
+    deployer.releases_including_skipped.length.should == 1
+  end
 end

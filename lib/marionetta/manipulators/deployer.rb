@@ -121,6 +121,16 @@ module Marionetta
         end
       end
 
+      # Delete release directories on remote machine.
+      # 
+      def clean()
+        rels = releases
+        rels.pop()
+        rm = ['rm', '-r'].concat(rels.map {|r| release_dir(r)})
+        rm << release_dir('skip-*')
+        cmd.ssh(rm)
+      end
+
     private
 
       def from_dir()
