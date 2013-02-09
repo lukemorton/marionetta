@@ -86,20 +86,22 @@ module Marionetta
         run_script(:after, release)
       end
 
+      def releases_including_skipped()
+        files = []
+
+        cmd.ssh("ls -m #{releases_dir}") do |stdout|
+          files.concat(stdout.read.split(/[,\s]+/))
+        end
+
+        return files
+      end
+
       # To get an array of all releases call `.releases()`.
       # Any release that is subsequently rolled back will not
       # be listed.
       # 
       def releases()
-        releases = []
-
-        cmd.ssh("ls -m #{releases_dir}") do |stdout|
-          stdout.read.split(/[,\s]+/).each do |release|
-            releases << release unless release.index('skip-') == 0
-          end
-        end
-
-        return releases
+        releases_including_skipped.delete_if {|r| r =~ /^skip-/}
       end
 
       # If you push out and need to rollback to the previous
