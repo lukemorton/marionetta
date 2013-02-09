@@ -166,7 +166,6 @@ staging.manipulate_each_server(:deployer, :rollback)
 
 ## Upcoming
 
- - Add puppet safe-upgrade ability (v0.4.x)
  - Add shared directories with Manipulators::Deployer (v0.4.x)
  - Add permissions with Manipulators::Deployer (v0.4.x)
  - Remove rollback feature... we don't need rollbacks IMO. (v0.5.x)
