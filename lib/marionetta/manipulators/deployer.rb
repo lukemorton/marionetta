@@ -54,6 +54,12 @@ module Marionetta
 
       ### Deploying
 
+      # Setup deploy environment on remote server.
+      # 
+      def setup()
+        create_directories
+      end
+
       # Run a deploy to your remote server. The process
       # involves:
       # 
@@ -172,6 +178,24 @@ module Marionetta
 
       def current_dir()
         "#{to_dir}/current"
+      end
+
+      def install_dir_cmd(dir)
+        owner = 'www-data'
+        group = 'www-data'
+        chmod = '775'
+
+        return "install -d #{dir} -o #{owner} -g #{group} -m #{chmod}"
+      end
+
+      def create_directories()
+        install = [install_dir_cmd(releases_dir), install_dir_cmd(cache_dir)]
+        
+        if server[:deployer].has_key?(:shared_directories)
+          install << install_dir_cmd(shared_dir)
+        end
+
+        cmd.ssh(install)
       end
 
       def create_release_name()

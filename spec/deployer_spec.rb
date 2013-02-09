@@ -11,12 +11,18 @@ def cmd()
 end
 
 describe Marionetta::Manipulators::Deployer do
-  it 'should deploy' do
+  it 'should setup' do
     cmd.ssh('rm -rf ~/app')
+    deployer.setup
+    cmd.ssh("[ -d ~/app/releases ]").should == true
+    cmd.ssh("[ -d ~/app/shared ]").should == true
+    cmd.ssh("[ -d ~/app/cache ]").should == true
+  end
+  
+  it 'should deploy' do
     deployer.deploy
     deployer.deploy
     cmd.ssh("[ -L ~/app/current ]").should == true
-    cmd.ssh("[ -d ~/app/releases ]").should == true
     cmd.ssh("[ -f ~/app/current/app.rb ]").should == true
     cmd.ssh("[ -f ~/app/current/app-copy.rb ]").should == true
     cmd.ssh("[ -f ~/app/current/exclude.txt ]").should_not == true
