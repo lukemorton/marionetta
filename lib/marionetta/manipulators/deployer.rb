@@ -80,6 +80,8 @@ module Marionetta
         DirectorySync.sync(server, from_dir, cache_dir, server[:deployer])
         copy_cache_dir_to_release(release)
 
+        symlink_shared_directories(release)
+
         send_scripts()
         run_script(:before, release)
         symlink_release_dir(release)
@@ -156,6 +158,10 @@ module Marionetta
         "#{to_dir}/cache"
       end
 
+      def shared_dir()
+        "#{to_dir}/shared"
+      end
+
       def releases_dir()
         "#{to_dir}/releases"
       end
@@ -186,6 +192,24 @@ module Marionetta
       def copy_cache_dir_to_release(release)
         release_dir = release_dir(release)
         cmd.ssh("mkdir -p #{releases_dir} && cp -r #{cache_dir} #{release_dir}")
+      end
+
+      def symlink_shared_directories(release)
+        return unless server[:deployer].has_key?(:shared_directories)
+
+        release_dir = release_dir(release)
+        cmds = []
+
+        server[:deployer][:shared_directories].each do |d|
+          to = "#{release_dir}/#{d}"
+          from = "#{shared_dir}/#{d}"
+
+          cmds << "rm -r #{to}"
+          cmds << "mkdir -p #{from}"
+          cmds << "ln -s #{from} #{to}"
+        end
+
+        cmd.ssh(cmds.join(' && '))
       end
 
       def send_scripts()
