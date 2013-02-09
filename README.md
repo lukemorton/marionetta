@@ -171,8 +171,8 @@ staging.manipulate_each_server(:deployer, :rollback)
  - Remove Marionetta::Manipulators::Debloyer (v0.5.x) 
  - Use rye for commands (https://github.com/delano/rye) (v0.5.x)
  - Use a single SSH connection per task (v0.5.x)
- - Add ability to define shared directories with Manipulators::Deployer
- - Add ability to define permissions with Manipulators::Deployer
+ - Add shared directories with Manipulators::Deployer
+ - Add permissions with Manipulators::Deployer
 
 ## Author
 
