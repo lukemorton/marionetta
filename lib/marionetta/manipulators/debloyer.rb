@@ -19,6 +19,8 @@ module Marionetta
 
       def initialize(server)
         @server = server
+        server[:logger].warn('You should try Marionetta::Manipulators::Deployer')
+        server[:logger].warn('Debloyer (thats Deb) is now deprecated and will be removed in v0.5.x')
       end
 
       def can?()
