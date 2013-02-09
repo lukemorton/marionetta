@@ -54,16 +54,16 @@ module Marionetta
 
       ### Deploying
 
-      # Call `.deploy()` to run a deploy to your remote
-      # server. The process involves:
+      # Run a deploy to your remote server. The process
+      # involves:
       # 
       #  - `:from` directory rsync'd to remote cache directory
       #    with `:exclude` files being ignored
       #  - cache directory copied on remote machine to
       #    releases directory
-      #  - `:before_script` run
+      #  - `:before_script` and `:before_scripts` run
       #  - release directory symlinked to a current directory
-      #  - `:after_script` run
+      #  - `:after_script` and `:before_scripts` run
       # 
       # The directory structure under `server[:deployer][:to]`
       # looks something like this:
@@ -86,6 +86,9 @@ module Marionetta
         run_script(:after, release)
       end
 
+      # Get an array of all releases including those which
+      # have been rolled back (skipped).
+      # 
       def releases_including_skipped()
         files = []
 
@@ -96,8 +99,8 @@ module Marionetta
         return files
       end
 
-      # To get an array of all releases call `.releases()`.
-      # Any release that is subsequently rolled back will not
+      # Get an array of all releases call `.releases()`. Any
+      # release that is subsequently rolled back will not
       # be listed.
       # 
       def releases()
