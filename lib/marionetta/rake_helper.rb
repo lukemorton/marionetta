@@ -6,7 +6,6 @@
 # 
 require 'marionetta'
 require 'marionetta/manipulators'
-require 'rake'
 
 module Marionetta
   module RakeHelper
