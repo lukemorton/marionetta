@@ -278,7 +278,7 @@ module Marionetta
       end
 
       def timestamp()
-        Time.new.strftime('%F_%T')
+        Time.new.strftime('%F_%H-%M-%S')
       end
     end
   end
