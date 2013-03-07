@@ -15,8 +15,8 @@ describe Marionetta::Manipulators::Deployer do
     cmd.ssh('rm -rf ~/app')
     deployer.setup
     cmd.ssh("[ -d ~/app/releases ]").should == true
+    cmd.ssh("[ -d ~/app/releases/cache ]").should == true
     cmd.ssh("[ -d ~/app/shared ]").should == true
-    cmd.ssh("[ -d ~/app/cache ]").should == true
   end
   
   it 'should deploy' do

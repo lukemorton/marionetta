@@ -161,7 +161,7 @@ module Marionetta
       end
 
       def cache_dir()
-        "#{to_dir}/cache"
+        "#{to_dir}/releases/cache"
       end
 
       def shared_dir()
