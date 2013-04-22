@@ -137,9 +137,12 @@ module Marionetta
       def clean()
         rels = releases()
         rels.pop()
-        rm = ['rm', '-rf'].concat(rels.map {|r| release_dir(r)})
-        rm << release_dir('skip-*')
-        cmd.ssh(rm)
+
+        unless rels.empty?
+          rm = ['rm', '-rf'].concat(rels.map {|r| release_dir(r)})
+          rm << release_dir('skip-*')
+          cmd.ssh(rm)
+        end
       end
 
     private
