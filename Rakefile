@@ -36,7 +36,7 @@ task(:publish => :gem) do
 
   cmd = [
     "git tag #{git_tag}",
-    "git push origin develop develop:master #{git_tag}",
+    "git push origin HEAD:develop HEAD:master #{git_tag}",
     "gem push marionetta-#{version}.gem",
   ]
   system(cmd.join(' && '))
