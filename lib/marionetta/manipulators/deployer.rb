@@ -83,6 +83,8 @@ module Marionetta
       def deploy()
         release = create_release_name()
 
+        write_deploy_version_file()
+
         DirectorySync.sync(server, from_dir, cache_dir, server[:deployer])
         copy_cache_dir_to_release(release)
 
@@ -179,6 +181,19 @@ module Marionetta
         "#{releases_dir}/#{release}"
       end
 
+      def release_version()
+        if server[:deployer].has_key?(:version)
+          version_cmd = server[:deployer][:version][:command]
+          version = nil
+
+          cmd.system("cd #{from_dir} && #{version_cmd}") do |stdout|
+            version = stdout.read.strip
+          end
+
+          return version
+        end
+      end
+
       def current_dir()
         "#{to_dir}/current"
       end
@@ -204,16 +219,16 @@ module Marionetta
       def create_release_name()
         name = timestamp
 
-        if server[:deployer].has_key?(:version)
-          version_cmd = server[:deployer][:version][:command]
-
-          cmd.system("cd #{from_dir} && #{version_cmd}") do |stdout|
-            version = stdout.read.strip
-            name << "_#{version}" unless version.empty?
-          end
-        end
+        version = release_version()
+        name << "_#{version}" unless version.empty?
 
         return name
+      end
+
+      def write_deploy_version_file()
+        if version = release_version()
+          cmd.system("echo #{version} > #{from_dir}/DEPLOY-VERSION")
+        end
       end
 
       def copy_cache_dir_to_release(release)
